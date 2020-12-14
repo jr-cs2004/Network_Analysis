@@ -66,6 +66,38 @@ def convertIDs(query, source_type, target_type):
 # ######################################################################################
 
 
+# statistics_file = open('statistics.txt', 'a')
+
+# # First we must read the list of all interactions from a intact dataset
+# # All intercations are stored in two lists each containing one end of each interaction.
+
+# print('reading interaction file...\n')
+
+# IntAct_File = open("PPIs.txt", "r")
+# intact_source_protein_IDs = []
+# intact_target_protein_IDs = []
+# counter = 0
+# for line in IntAct_File:
+#    counter += 1
+#    source = line.split()[0]
+#    target = line.split()[1]
+#    intact_source_protein_IDs.append(source)
+#    intact_target_protein_IDs.append(target)
+
+# _str = ('the interaction file was read:' + '\n'
+# + '# of lines in the PPI files read for source interacting proteins: ' + str(len(intact_source_protein_IDs)) + '\n'
+# + '# of lines in the PPI files read for target interacting proteins: ' + str(len(intact_target_protein_IDs)) + '\n'
+# + '# of unique proteins in the source lines: ' + str(len(list(set(intact_source_protein_IDs)))) + '\n'
+# + '# of unique proteins in the target lines: ' + str(len(list(set(intact_target_protein_IDs)))) + '\n')
+# print(_str)
+# statistics_file.write(_str)
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
+
 statistics_file = open('statistics.txt', 'a')
 
 # First we must read the list of all interactions from a intact dataset
@@ -73,7 +105,7 @@ statistics_file = open('statistics.txt', 'a')
 
 print('reading interaction file...\n')
 
-IntAct_File = open("PPIs.txt", "r")
+IntAct_File = open("PPI_without_repeats.txt", "r")
 intact_source_protein_IDs = []
 intact_target_protein_IDs = []
 counter = 0
@@ -92,7 +124,7 @@ _str = ('the interaction file was read:' + '\n'
 print(_str)
 statistics_file.write(_str)
 
-quit()
+
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
@@ -100,67 +132,66 @@ quit()
 # to check if some PPIs are repeated or no,
 # if so, to check how many times each PPI is repeated.
 
-temp_counter = 0
-counter_0 = 0
-counter_1 = 0
-counter_2 = 0
-counter_3 = 0
-counter_4 = 0
-counter_5 = 0
-counter_6 = 0
-removing_indices = []
-counter_hash = {}
-for i in range(0, 100):
-   counter_hash[i] = 0
-n = len(intact_source_protein_IDs)
-for i in range(0, n):
-   if (i < n): # at each iteration, n may changes
-      if (i % 100 == 0):
-         print (round(i / n * 100, 1), '%', end="\r")
+# temp_counter = 0
+# counter_0 = 0
+# counter_1 = 0
+# counter_2 = 0
+# counter_3 = 0
+# counter_4 = 0
+# counter_5 = 0
+# counter_6 = 0
+# removing_indices = []
+# counter_hash = {}
+# for i in range(0, 100):
+#    counter_hash[i] = 0
+# n = len(intact_source_protein_IDs)
+# for i in range(0, n):
+#    if (i < n): # at each iteration, n may changes
+#       if (i % 100 == 0):
+#          print (round(i / n * 100, 1), '%', end="\r")
       
-      source_i = intact_source_protein_IDs[i]
-      target_i = intact_target_protein_IDs[i]
-      temp_counter = 0
-      removing_indices = []
-      for j in range(0,n):
-         if(i < j):
-            source_j = intact_source_protein_IDs[j]
-            target_j = intact_target_protein_IDs[j]     
-            if ( (source_i == source_j and target_i == target_j) or (source_i == target_j and source_j == target_i)):
-               removing_indices.append(j)
-               temp_counter += 1
-      for indx in sorted(removing_indices, reverse = True):
-         del intact_source_protein_IDs[indx] 
-         del intact_target_protein_IDs[indx]
-      n = len(intact_source_protein_IDs)
-      counter_hash[temp_counter] = counter_hash[temp_counter] + 1
-      if (temp_counter == 0):
-         counter_0 += 1   
-      if (temp_counter == 1):
-         counter_1 += 1
-      if (temp_counter == 2):
-         counter_2 += 1
-      if (temp_counter == 3):
-         counter_3 += 1
-      if (temp_counter == 4):
-         counter_4 += 1
-      if (temp_counter == 5):
-         counter_5 += 1
-      if (temp_counter == 6):
-         counter_6 += 1
+#       source_i = intact_source_protein_IDs[i]
+#       target_i = intact_target_protein_IDs[i]
+#       temp_counter = 0
+#       removing_indices = []
+#       for j in range(0,n):
+#          if(i < j):
+#             source_j = intact_source_protein_IDs[j]
+#             target_j = intact_target_protein_IDs[j]     
+#             if ( (source_i == source_j and target_i == target_j) or (source_i == target_j and source_j == target_i)):
+#                removing_indices.append(j)
+#                temp_counter += 1
+#       for indx in sorted(removing_indices, reverse = True):
+#          del intact_source_protein_IDs[indx] 
+#          del intact_target_protein_IDs[indx]
+#       n = len(intact_source_protein_IDs)
+#       counter_hash[temp_counter] = counter_hash[temp_counter] + 1
+#       if (temp_counter == 0):
+#          counter_0 += 1   
+#       if (temp_counter == 1):
+#          counter_1 += 1
+#       if (temp_counter == 2):
+#          counter_2 += 1
+#       if (temp_counter == 3):
+#          counter_3 += 1
+#       if (temp_counter == 4):
+#          counter_4 += 1
+#       if (temp_counter == 5):
+#          counter_5 += 1
+#       if (temp_counter == 6):
+#          counter_6 += 1
 
-print(len(removing_indices))
-print(len(list(set(removing_indices))))
+# print(len(removing_indices))
+# print(len(list(set(removing_indices))))
 
-n = len(intact_source_protein_IDs)
-with open('PPI_without_repeats.txt', 'w') as _file:
-   for i in range(0, n):
-      _file.write(intact_source_protein_IDs[i] + '\t' + intact_target_protein_IDs[i] + '\n')
+# n = len(intact_source_protein_IDs)
+# with open('PPI_without_repeats.txt', 'w') as _file:
+#    for i in range(0, n):
+#       _file.write(intact_source_protein_IDs[i] + '\t' + intact_target_protein_IDs[i] + '\n')
 
-with open('Repeats_statistics.txt', 'w') as _file:
-   for key in counter_hash:
-      _file.write(str(key) + '\t' + str(counter_hash[key]) + '\n')
-quit()
+# with open('Repeats_statistics.txt', 'w') as _file:
+#    for key in counter_hash:
+#       _file.write(str(key) + '\t' + str(counter_hash[key]) + '\n')
 
 
 # ######################################################################################
@@ -261,6 +292,8 @@ for i in range(0, n):
    intact_target_to_flybase_hash[intact_target_to_flybase_IDs[0][i]].append(intact_target_to_flybase_IDs[1][i])
    all_intact_to_flybase_hash[intact_target_to_flybase_IDs[0][i]].append(intact_target_to_flybase_IDs[1][i])
 
+
+# this segment of code is just to test the correctness of the code
 _temp = list(all_intact_to_flybase_hash.keys())
 _str = ('# of all_intact_to_flybase_hash_keys_length: ' + str(len(_temp))
 + ', and unique: ' + str(len(list(set(_temp)))) + '\n')
@@ -319,7 +352,7 @@ for key in all_intact_to_flybase_hash:
       counter_0 += 1
    elif (len(list(set(all_intact_to_flybase_hash[key]))) == 1):
       counter_1 += 1
-      if (key in intact_proteins_having_no_intersection_in_their_corresponding_map_in_flybase):
+      if (key in intact_proteins_having_no_intersection_in_their_corresponding_map_in_flybase or key in intact_proteins_having_the_same_corresponding_map_in_flybase):
          unique_intact_to_flybase_hash[key] = all_intact_to_flybase_hash[key][0]
          intact_proteins_mapped_to_exactly_one_unique_ID[0].append(key)
          intact_proteins_mapped_to_exactly_one_unique_ID[1].append(all_intact_to_flybase_hash[key][0])
@@ -357,7 +390,7 @@ with open('intact.IDs.mapping.to.flybase.IDs.txt', 'a') as _file:
 
 n = len(intact_source_protein_IDs)
 counter = 0
-with open('intact.PPI.Network.using.flybase.IDs.txt', 'a') as _file:
+with open('intact.GGI.Network.Unique.txt', 'a') as _file:
    for i in range(0, n):
       if (unique_intact_to_flybase_hash.get(intact_source_protein_IDs[i], False) and unique_intact_to_flybase_hash.get(intact_target_protein_IDs[i], False)):
          _file.write(unique_intact_to_flybase_hash[intact_source_protein_IDs[i]] + '\t' +
