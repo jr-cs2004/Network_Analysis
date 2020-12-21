@@ -373,8 +373,18 @@ statistics_file.write(_str)
 biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot = []
 biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot = []
 biogrid_proteins_having_the_same_corresponding_map_in_uniprot = []
+
+all_counter = [0, 0]
+no_intersection_counter = [0, 0]
+with_intersection_counter = [0, 0]
+the_same_counter = [0, 0]
+
 for key in all_biogrid_to_uniprot_hash:
    lst_1 = list(set(all_biogrid_to_uniprot_hash[key]))
+   if (len(lst_1) == 1):
+      all_counter[0] += 1
+   if (len(lst_1) > 1):
+      all_counter[1] += 1
    flag = True
    for key_2 in all_biogrid_to_uniprot_hash:      
       if (key != key_2):
@@ -383,29 +393,47 @@ for key in all_biogrid_to_uniprot_hash:
          if (len(lst_3) > 0):
             flag = False
             biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot.append(key)
+            if (len(lst_3) == 1):
+               with_intersection_counter[0] += 1
+            if (len(lst_3) > 1):
+               with_intersection_counter[1] += 1
+
             if (len(lst_3) == len(lst_1) or len(lst_3) == len(lst_2)):
-               biogrid_proteins_having_the_same_corresponding_map_in_uniprot.append(key)      
+               biogrid_proteins_having_the_same_corresponding_map_in_uniprot.append(key)
+               if (len(lst_3) == 1):
+                  the_same_counter[0] += 1
+               if (len(lst_3) > 1):
+                  the_same_counter[1] += 1
    if (flag and len(lst_1) > 0):
       biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot.append(key)
+      if (len(lst_1) == 1):
+         no_intersection_counter[0] += 1
+      if (len(lst_1) > 1):
+         no_intersection_counter[1] += 1
+
+print(str(all_counter[0]) + '\t' + str(all_counter[1]))
 
 _str = ('# of biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot: '
 + str(len(biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot))
-+ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot)))) + '\n')
++ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot)))) + '\n'
++ 'mapped to exactly on ID: ' + str(no_intersection_counter[0]) + '\t' + 'mapped to more than one ID: ' + str(no_intersection_counter[1]))
 print(_str)
 statistics_file.write(_str)
 
 _str = ('# of biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot: '
 + str(len(biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot))
-+ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot)))) + '\n')
++ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot)))) + '\n'
++ 'mapped to exactly on ID: ' + str(with_intersection_counter[0]) + '\t' + 'mapped to more than one ID: ' + str(with_intersection_counter[1]))
 print(_str)
 statistics_file.write(_str)
 
 _str = ('# of biogrid_proteins_having_the_same_corresponding_map_in_uniprot: '
 + str(len(biogrid_proteins_having_the_same_corresponding_map_in_uniprot))
-+ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_the_same_corresponding_map_in_uniprot)))) + '\n')
++ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_the_same_corresponding_map_in_uniprot)))) + '\n'
++ 'mapped to exactly on ID: ' + str(the_same_counter[0]) + '\t' + 'mapped to more than one ID: ' + str(the_same_counter[1]))
 print(_str)
 statistics_file.write(_str)
-
+quit()
 
 # ######################################################################################
 # ######################################################################################
