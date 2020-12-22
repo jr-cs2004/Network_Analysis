@@ -339,6 +339,63 @@ statistics_file.write(_str)
 # ######################################################################################
 # ######################################################################################
 
+# we only use the PPIs of which both source and target genes are presented in the OGEE
+# and DEG data
+OGEE_File = open("../OGEE/7227_processed.txt", "r")
+list_of_valid_genes = []
+for line in OGEE_File:
+    list_of_valid_genes.append(line.split()[0])
+print(len(list(set(list_of_valid_genes))))
+
+source_removing_indices = []
+n = len(uniprot_of_source_to_flybase_IDs[1])
+for i in range(0, n):
+   if ( not(uniprot_of_source_to_flybase_IDs[1][i] in list_of_valid_genes) ):
+      source_removing_indices.append(i)
+print(len(source_removing_indices))
+print('# of invalid PPIs: ', len(list(set(source_removing_indices))))
+
+target_removing_indices = []
+n = len(uniprot_of_target_to_flybase_IDs[1])
+for i in range(0, n):
+   if ( not(uniprot_of_target_to_flybase_IDs[1][i] in list_of_valid_genes) ):
+      target_removing_indices.append(i)
+print(len(target_removing_indices))
+print('# of invalid PPIs: ', len(list(set(target_removing_indices))))
+
+for indx in sorted(source_removing_indices, reverse = True):  
+   del uniprot_of_source_to_flybase_IDs[0][indx]
+   del uniprot_of_source_to_flybase_IDs[1][indx]
+
+for indx in sorted(target_removing_indices, reverse = True):  
+   del uniprot_of_target_to_flybase_IDs[0][indx]
+   del uniprot_of_target_to_flybase_IDs[1][indx] 
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
+
+all_uniprot_proteins_having_at_least_an_ID_in_flybase = []
+all_uniprot_proteins_having_at_least_an_ID_in_flybase.extend(uniprot_of_source_to_flybase_IDs[0])
+all_uniprot_proteins_having_at_least_an_ID_in_flybase.extend(uniprot_of_target_to_flybase_IDs[0])
+
+all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase = []
+all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(uniprot_of_source_to_flybase_IDs[1])
+all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(uniprot_of_target_to_flybase_IDs[1])
+
+_str = ('# of all_uniprot_proteins_having_at_least_an_ID_in_flybase: '
++ str(len(list(set(all_uniprot_proteins_having_at_least_an_ID_in_flybase)))) + '\n'
++ '# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: '
++ str(len(list(set(all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase)))) + '\n')
+print(_str)
+statistics_file.write(_str)
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
 
 biogrid_source_to_uniprot_hash = {}
 biogrid_target_to_uniprot_hash = {}
@@ -376,9 +433,6 @@ biogrid_proteins_having_the_same_corresponding_map_in_uniprot = []
 
 all_counter = [0, 0]
 no_intersection_counter = [0, 0]
-with_intersection_counter = [0, 0]
-the_same_counter = [0, 0]
-
 for key in all_biogrid_to_uniprot_hash:
    lst_1 = list(set(all_biogrid_to_uniprot_hash[key]))
    if (len(lst_1) == 1):
@@ -393,17 +447,9 @@ for key in all_biogrid_to_uniprot_hash:
          if (len(lst_3) > 0):
             flag = False
             biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot.append(key)
-            if (len(lst_3) == 1):
-               with_intersection_counter[0] += 1
-            if (len(lst_3) > 1):
-               with_intersection_counter[1] += 1
-
             if (len(lst_3) == len(lst_1) or len(lst_3) == len(lst_2)):
                biogrid_proteins_having_the_same_corresponding_map_in_uniprot.append(key)
-               if (len(lst_3) == 1):
-                  the_same_counter[0] += 1
-               if (len(lst_3) > 1):
-                  the_same_counter[1] += 1
+
    if (flag and len(lst_1) > 0):
       biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot.append(key)
       if (len(lst_1) == 1):
@@ -422,18 +468,16 @@ statistics_file.write(_str)
 
 _str = ('# of biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot: '
 + str(len(biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot))
-+ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot)))) + '\n'
-+ 'mapped to exactly on ID: ' + str(with_intersection_counter[0]) + '\t' + 'mapped to more than one ID: ' + str(with_intersection_counter[1]))
++ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot)))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
 _str = ('# of biogrid_proteins_having_the_same_corresponding_map_in_uniprot: '
 + str(len(biogrid_proteins_having_the_same_corresponding_map_in_uniprot))
-+ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_the_same_corresponding_map_in_uniprot)))) + '\n'
-+ 'mapped to exactly on ID: ' + str(the_same_counter[0]) + '\t' + 'mapped to more than one ID: ' + str(the_same_counter[1]))
++ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_the_same_corresponding_map_in_uniprot)))) + '\n')
 print(_str)
 statistics_file.write(_str)
-quit()
+
 
 # ######################################################################################
 # ######################################################################################
@@ -471,12 +515,19 @@ statistics_file.write(_str)
 uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase = []
 uniprot_entries_having_intersection_in_their_corresponding_map_in_flybase = []
 uniprot_entries_having_the_same_corresponding_map_in_flybase = []
+
+all_counter = [0, 0]
+no_intersection_counter = [0, 0]
 for key in all_uniprot_to_flybase_hash:
-   lst_1 = all_uniprot_to_flybase_hash[key]
+   lst_1 = list(set(all_uniprot_to_flybase_hash[key]))
+   if (len(lst_1) == 1):
+      all_counter[0] += 1
+   if (len(lst_1) > 1):
+      all_counter[1] += 1
    flag = True
    for key_2 in all_uniprot_to_flybase_hash:      
       if (key != key_2):
-         lst_2 = all_uniprot_to_flybase_hash[key_2]
+         lst_2 = list(set(all_uniprot_to_flybase_hash[key_2]))
          lst_3 = [value for value in lst_1 if value in lst_2]
          if (len(lst_3) > 0):
             flag = False
@@ -485,10 +536,17 @@ for key in all_uniprot_to_flybase_hash:
                uniprot_entries_having_the_same_corresponding_map_in_flybase.append(key)
    if (flag and len(lst_1) > 0):
       uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase.append(key)
+      if (len(lst_1) == 1):
+         no_intersection_counter[0] += 1
+      if (len(lst_1) > 1):
+         no_intersection_counter[1] += 1
+
+print(str(all_counter[0]) + '\t' + str(all_counter[1]))
 
 _str = ('# of uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase: '
 + str(len(uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase))
-+ ', and uniques: ' + str(len(list(set(uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase)))) + '\n')
++ ', and uniques: ' + str(len(list(set(uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase)))) + '\n'
++ 'mapped to exactly on ID: ' + str(no_intersection_counter[0]) + '\t' + 'mapped to more than one ID: ' + str(no_intersection_counter[1]))
 print(_str)
 statistics_file.write(_str)
 
@@ -541,12 +599,19 @@ statistics_file.write(_str)
 biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase = []
 biogrid_proteins_having_intersection_in_their_corresponding_map_in_flybase = []
 biogrid_proteins_having_the_same_corresponding_map_in_flybase = []
+
+all_counter = [0, 0]
+no_intersection_counter = [0, 0]
 for key in all_biogrid_to_flybase_hash:
-   lst_1 = all_biogrid_to_flybase_hash[key]
+   lst_1 = list(set(all_biogrid_to_flybase_hash[key]))
+   if (len(lst_1) == 1):
+      all_counter[0] += 1
+   if (len(lst_1) > 1):
+      all_counter[1] += 1
    flag = True
    for key_2 in all_biogrid_to_flybase_hash:      
       if (key != key_2):
-         lst_2 = all_biogrid_to_flybase_hash[key_2]
+         lst_2 = list(set(all_biogrid_to_flybase_hash[key_2]))
          lst_3 = [value for value in lst_1 if value in lst_2]
          if (len(lst_3) > 0):
             flag = False
@@ -555,10 +620,17 @@ for key in all_biogrid_to_flybase_hash:
                biogrid_proteins_having_the_same_corresponding_map_in_flybase.append(key)
    if (flag and len(lst_1) > 0):
       biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase.append(key)
+      if (len(lst_1) == 1):
+         no_intersection_counter[0] += 1
+      if (len(lst_1) > 1):
+         no_intersection_counter[1] += 1
+
+print(str(all_counter[0]) + '\t' + str(all_counter[1]))
 
 _str = ('# of biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase: '
 + str(len(biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase))
-+ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase)))) + '\n')
++ ', and uniques: ' + str(len(list(set(biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase)))) + '\n'
++ 'mapped to exactly on ID: ' + str(no_intersection_counter[0]) + '\t' + 'mapped to more than one ID: ' + str(no_intersection_counter[1]))
 print(_str)
 statistics_file.write(_str)
 
@@ -684,6 +756,7 @@ with open('biogrid.PPI.Network.using.flybase.IDs.txt', 'a') as _file:
       if (unique_biogrid_to_flybase_hash.get(biogrid_source_protein_IDs[i], False) and unique_biogrid_to_flybase_hash.get(biogrid_target_protein_IDs[i], False)):
          _file.write(unique_biogrid_to_flybase_hash[biogrid_source_protein_IDs[i]] + '\t' +
             unique_biogrid_to_flybase_hash[biogrid_target_protein_IDs[i]] + '\n')
+
 
 # ######################################################################################
 # ######################################################################################
