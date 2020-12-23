@@ -57,7 +57,7 @@ for i in range(0, n):
     for j in range(0, n):
         if (i < j and genes[i] == genes[j] and essentiality[i] != essentiality[j]):
             counter_conflict += 1
-            removing_indices.append(i)
+            removing_indices.append(i) # since the repeat number for each gene is only 2, this line is OK, otherwise it must be rewritten in another way.
             removing_indices.append(j)
         if (i < j and genes[i] == genes[j] and essentiality[i] == essentiality[j]):
             counter_redundant += 1
