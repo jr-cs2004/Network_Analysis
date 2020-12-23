@@ -215,7 +215,7 @@ all_unique_proteins_in_biogrid.extend(biogrid_target_protein_IDs)
 _str = '# of all_unique_proteins_in_biogrid: ' + str(len(list(set(all_unique_proteins_in_biogrid)))) + '\n'
 print(_str)
 statistics_file.write(_str)
-
+all_unique_proteins_in_biogrid = list(set(all_unique_proteins_in_biogrid))
 
 # ######################################################################################
 # ######################################################################################
@@ -231,25 +231,13 @@ statistics_file.write(_str)
 
 print('converting biogrid IDs to uniprot IDs...\n')
 
-query = ' '.join(biogrid_source_protein_IDs)
-biogrid_source_to_uniprot_IDs = convertIDs(query, 'P_ENTREZGENEID', 'ID')
+query = ' '.join(all_unique_proteins_in_biogrid)
+biogrid_to_uniprot_IDs = convertIDs(query, 'P_ENTREZGENEID', 'ID')
 
 _str = ('biogrid IDs are mapped to uniprot IDs:' + '\n'
 + '# of IDs returned by uniprot Mapper: ' + '\n'
-+ 'Source: ' + '\n'
-+ 'from: ' + str(len(biogrid_source_to_uniprot_IDs[0]))  + ', and to: ' +  str(len(biogrid_source_to_uniprot_IDs[1]))
-+ ', and uniques --> from: ' + str(len(list(set(biogrid_source_to_uniprot_IDs[0])))) +', and to: ' +  str(len(list(set(biogrid_source_to_uniprot_IDs[1])))) + '\n')
-print(_str)
-statistics_file.write(_str)
-
-query = ' '.join(biogrid_target_protein_IDs)
-biogrid_target_to_uniprot_IDs = convertIDs(query, 'P_ENTREZGENEID', 'ID')
-
-_str = ('biogrid IDs are mapped to uniprot IDs:' + '\n'
-+ '# of IDs returned by uniprot Mapper: ' + '\n'
-+ 'Target: ' + '\n'
-+ 'from: ' + str(len(biogrid_target_to_uniprot_IDs[0]))  + ', and to: ' +  str(len(biogrid_target_to_uniprot_IDs[1]))
-+ ', and uniques --> from: ' + str(len(list(set(biogrid_target_to_uniprot_IDs[0]))))  + ', and to: ' +  str(len(list(set(biogrid_target_to_uniprot_IDs[1])))) + '\n')
++ 'from: ' + str(len(biogrid_to_uniprot_IDs[0]))  + ', and to: ' +  str(len(biogrid_to_uniprot_IDs[1]))
++ ', and uniques --> from: ' + str(len(list(set(biogrid_to_uniprot_IDs[0])))) +', and to: ' +  str(len(list(set(biogrid_to_uniprot_IDs[1])))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
@@ -258,19 +246,11 @@ statistics_file.write(_str)
 # ######################################################################################
 # ######################################################################################
 
-
-all_biogrid_proteins_having_at_least_an_ID_in_uniprot = []
-all_biogrid_proteins_having_at_least_an_ID_in_uniprot.extend(biogrid_source_to_uniprot_IDs[0])
-all_biogrid_proteins_having_at_least_an_ID_in_uniprot.extend(biogrid_target_to_uniprot_IDs[0])
-
-all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot = []
-all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot.extend(biogrid_source_to_uniprot_IDs[1])
-all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot.extend(biogrid_target_to_uniprot_IDs[1])
 
 _str = ('# of all_biogrid_proteins_having_at_least_an_ID_in_uniprot: '
-+ str(len(list(set(all_biogrid_proteins_having_at_least_an_ID_in_uniprot)))) + '\n'
++ str(len(list(set(biogrid_to_uniprot_IDs[0])))) + '\n'
 + '# of all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot: '
-+ str(len(list(set(all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot)))) + '\n')
++ str(len(list(set(biogrid_to_uniprot_IDs[1])))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
@@ -289,48 +269,28 @@ statistics_file.write(_str)
 
 print('converting uniprot IDs to flybase IDs...\n')
 
-uniprot_of_source_protein_IDs = biogrid_source_to_uniprot_IDs[1]
-query = ' '.join(uniprot_of_source_protein_IDs)
-uniprot_of_source_to_flybase_IDs = convertIDs(query, 'ID', 'FLYBASE_ID')
+
+query = ' '.join(biogrid_to_uniprot_IDs[1])
+uniprot_to_flybase_IDs = convertIDs(query, 'ID', 'FLYBASE_ID')
 
 _str = ('uniprot IDs are mapped to flybase IDs:' + '\n'
 + '# of IDs returned by uniprot Mapper: ' + '\n'
-+ 'Source: ' + '\n'
-+ 'from: ' + str(len(uniprot_of_source_to_flybase_IDs[0]))  + ', and to: ' +  str(len(uniprot_of_source_to_flybase_IDs[1]))
-+ ', and uniques --> from: ' + str(len(list(set(uniprot_of_source_to_flybase_IDs[0])))) +', and to: ' +  str(len(list(set(uniprot_of_source_to_flybase_IDs[1])))) + '\n')
-print(_str)
-statistics_file.write(_str)
-
-uniprot_of_target_protein_IDs = biogrid_target_to_uniprot_IDs[1]
-query = ' '.join(uniprot_of_target_protein_IDs)
-uniprot_of_target_to_flybase_IDs = convertIDs(query, 'ID', 'FLYBASE_ID')
-
-_str = ('uniprot IDs are mapped to flybase IDs:' + '\n'
-+ '# of IDs returned by uniprot Mapper: ' + '\n'
-+ 'Target: ' + '\n'
-+ 'from: ' + str(len(uniprot_of_target_to_flybase_IDs[0]))  + ', and to: ' +  str(len(uniprot_of_target_to_flybase_IDs[1]))
-+ ', and uniques --> from: ' + str(len(list(set(uniprot_of_target_to_flybase_IDs[0])))) +', and to: ' +  str(len(list(set(uniprot_of_target_to_flybase_IDs[1])))) + '\n')
++ 'from: ' + str(len(uniprot_to_flybase_IDs[0]))  + ', and to: ' +  str(len(uniprot_to_flybase_IDs[1]))
++ ', and uniques --> from: ' + str(len(list(set(uniprot_to_flybase_IDs[0])))) +', and to: ' +  str(len(list(set(uniprot_to_flybase_IDs[1])))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
 
+
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
 
-
-all_uniprot_proteins_having_at_least_an_ID_in_flybase = []
-all_uniprot_proteins_having_at_least_an_ID_in_flybase.extend(uniprot_of_source_to_flybase_IDs[0])
-all_uniprot_proteins_having_at_least_an_ID_in_flybase.extend(uniprot_of_target_to_flybase_IDs[0])
-
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase = []
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(uniprot_of_source_to_flybase_IDs[1])
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(uniprot_of_target_to_flybase_IDs[1])
 
 _str = ('# of all_uniprot_proteins_having_at_least_an_ID_in_flybase: '
-+ str(len(list(set(all_uniprot_proteins_having_at_least_an_ID_in_flybase)))) + '\n'
++ str(len(list(set(uniprot_to_flybase_IDs[0])))) + '\n'
 + '# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: '
-+ str(len(list(set(all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase)))) + '\n')
++ str(len(list(set(uniprot_to_flybase_IDs[1])))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
@@ -343,19 +303,17 @@ statistics_file.write(_str)
 print('temp 1')
 temp_File = open('temp.txt', 'w')
 
-n = len(biogrid_source_to_uniprot_IDs[0])
+n = len(uniprot_to_flybase_IDs[0])
 for i in range(0, n):
-   temp_File.write(biogrid_source_to_uniprot_IDs[0][i] + '\t' + biogrid_source_to_uniprot_IDs[1][i] + '\n')
-   if (biogrid_source_to_uniprot_IDs[1][i] == 'A4V243_DROME'):
-      print(str(i), '\t', biogrid_source_to_uniprot_IDs[0][i])
-
-
-n = len(biogrid_target_to_uniprot_IDs[0])
+   temp_File.write(uniprot_to_flybase_IDs[0][i] + '\t' + uniprot_to_flybase_IDs[1][i] + '\n')
+   if (uniprot_to_flybase_IDs[1][i] == 'FBgn0261360'):
+      print(str(i), '\t', uniprot_to_flybase_IDs[0][i])
+      
+n = len(biogrid_to_uniprot_IDs[0])
 for i in range(0, n):
-   temp_File.write(biogrid_target_to_uniprot_IDs[0][i] + '\t' + biogrid_target_to_uniprot_IDs[1][i] + '\n')
-   if (biogrid_target_to_uniprot_IDs[1][i] == 'A4V243_DROME'):
-      print(str(i), '\t', biogrid_target_to_uniprot_IDs[0][i])
-
+   temp_File.write(biogrid_to_uniprot_IDs[0][i] + '\t' + biogrid_to_uniprot_IDs[1][i] + '\n')
+   if (biogrid_to_uniprot_IDs[1][i] == 'A4V243_DROME'):
+      print(str(i), '\t', biogrid_to_uniprot_IDs[0][i])
 quit()
 
 # ######################################################################################
@@ -371,64 +329,29 @@ for line in OGEE_File:
     list_of_valid_genes.append(line.split()[0])
 print(len(list(set(list_of_valid_genes))))
 
-source_removing_indices = []
-n = len(uniprot_of_source_to_flybase_IDs[1])
+removing_indices = []
+n = len(uniprot_to_flybase_IDs[1])
 for i in range(0, n):
-   if ( not(uniprot_of_source_to_flybase_IDs[1][i] in list_of_valid_genes) ):
-      source_removing_indices.append(i)
-print(len(source_removing_indices))
-print('# of invalid PPIs: ', len(list(set(source_removing_indices))))
+   if ( not(uniprot_to_flybase_IDs[1][i] in list_of_valid_genes) ):
+      removing_indices.append(i)
+print(len(removing_indices))
+print('# of invalid PPIs: ', len(list(set(removing_indices))))
 
-target_removing_indices = []
-n = len(uniprot_of_target_to_flybase_IDs[1])
-for i in range(0, n):
-   if ( not(uniprot_of_target_to_flybase_IDs[1][i] in list_of_valid_genes) ):
-      target_removing_indices.append(i)
-print(len(target_removing_indices))
-print('# of invalid PPIs: ', len(list(set(target_removing_indices))))
+for indx in sorted(removing_indices, reverse = True):  
+   del uniprot_to_flybase_IDs[0][indx]
+   del uniprot_to_flybase_IDs[1][indx]
 
-for indx in sorted(source_removing_indices, reverse = True):  
-   del uniprot_of_source_to_flybase_IDs[0][indx]
-   del uniprot_of_source_to_flybase_IDs[1][indx]
 
-for indx in sorted(target_removing_indices, reverse = True):  
-   del uniprot_of_target_to_flybase_IDs[0][indx]
-   del uniprot_of_target_to_flybase_IDs[1][indx] 
 
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
 
-# temp
-print('temp 2')
-n = len(uniprot_of_source_to_flybase_IDs[0])
-for i in range(0, n):
-   if (uniprot_of_source_to_flybase_IDs[1][i] == 'A4V243_DROME'):
-      print(str(i), '\t', uniprot_of_source_to_flybase_IDs[0][i])
-
-
-n = len(uniprot_of_target_to_flybase_IDs[0])
-for i in range(0, n):
-   if (uniprot_of_target_to_flybase_IDs[1][i] == 'A4V243_DROME'):
-      print(str(i), '\t', uniprot_of_target_to_flybase_IDs[0][i])
-quit()
-# ######################################################################################
-# ######################################################################################
-# ######################################################################################
-
-
-all_uniprot_proteins_having_at_least_an_ID_in_flybase = []
-all_uniprot_proteins_having_at_least_an_ID_in_flybase.extend(uniprot_of_source_to_flybase_IDs[0])
-all_uniprot_proteins_having_at_least_an_ID_in_flybase.extend(uniprot_of_target_to_flybase_IDs[0])
-
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase = []
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(uniprot_of_source_to_flybase_IDs[1])
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(uniprot_of_target_to_flybase_IDs[1])
 
 _str = ('# of all_uniprot_proteins_having_at_least_an_ID_in_flybase: '
-+ str(len(list(set(all_uniprot_proteins_having_at_least_an_ID_in_flybase)))) + '\n'
++ str(len(list(set(uniprot_to_flybase_IDs[0])))) + '\n'
 + '# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: '
-+ str(len(list(set(all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase)))) + '\n')
++ str(len(list(set(uniprot_to_flybase_IDs[1])))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
@@ -437,32 +360,18 @@ statistics_file.write(_str)
 # ######################################################################################
 
 
-biogrid_source_to_uniprot_hash = {}
-biogrid_target_to_uniprot_hash = {}
-all_biogrid_to_uniprot_hash = {}
+biogrid_to_uniprot_hash = {}
 
 # for x in list(set(biogrid_source_to_uniprot_IDs[0])):
-for x in list(set(biogrid_source_protein_IDs)):
-   biogrid_source_to_uniprot_hash[x] = []
-   all_biogrid_to_uniprot_hash[x] = []
+for x in list(set(all_unique_proteins_in_biogrid)):
+   biogrid_to_uniprot_hash[x] = []
 
-n = len(biogrid_source_to_uniprot_IDs[0])
+n = len(biogrid_to_uniprot_IDs[0])
 for i in range(0, n): 
-   biogrid_source_to_uniprot_hash[biogrid_source_to_uniprot_IDs[0][i]].append(biogrid_source_to_uniprot_IDs[1][i])
-   all_biogrid_to_uniprot_hash[biogrid_source_to_uniprot_IDs[0][i]].append(biogrid_source_to_uniprot_IDs[1][i])
+   biogrid_to_uniprot_hash[biogrid_to_uniprot_IDs[0][i]].append(biogrid_to_uniprot_IDs[1][i])
 
-# for x in list(set(biogrid_target_to_uniprot_IDs[0])):
-for x in list(set(biogrid_target_protein_IDs)):
-   biogrid_target_to_uniprot_hash[x] = []
-   all_biogrid_to_uniprot_hash[x] = []
-
-n = len(biogrid_target_to_uniprot_IDs[0])
-for i in range(0, n): 
-   biogrid_target_to_uniprot_hash[biogrid_target_to_uniprot_IDs[0][i]].append(biogrid_target_to_uniprot_IDs[1][i])
-   all_biogrid_to_uniprot_hash[biogrid_target_to_uniprot_IDs[0][i]].append(biogrid_target_to_uniprot_IDs[1][i])
-
-_temp = list(all_biogrid_to_uniprot_hash.keys())
-_str = ('# of all_biogrid_to_uniprot_hash_keys_length: ' + str(len(_temp))
+_temp = list(biogrid_to_uniprot_hash.keys())
+_str = ('# of biogrid_to_uniprot_hash_keys_length: ' + str(len(_temp))
 + ', and unique: ' + str(len(list(set(_temp)))))
 print(_str)
 statistics_file.write(_str)
@@ -473,16 +382,16 @@ biogrid_proteins_having_the_same_corresponding_map_in_uniprot = []
 
 all_counter = [0, 0]
 no_intersection_counter = [0, 0]
-for key in all_biogrid_to_uniprot_hash:
-   lst_1 = list(set(all_biogrid_to_uniprot_hash[key]))
+for key in biogrid_to_uniprot_hash:
+   lst_1 = list(set(biogrid_to_uniprot_hash[key]))
    if (len(lst_1) == 1):
       all_counter[0] += 1
    if (len(lst_1) > 1):
       all_counter[1] += 1
    flag = True
-   for key_2 in all_biogrid_to_uniprot_hash:      
+   for key_2 in biogrid_to_uniprot_hash:      
       if (key != key_2):
-         lst_2 = list(set(all_biogrid_to_uniprot_hash[key_2]))
+         lst_2 = list(set(biogrid_to_uniprot_hash[key_2]))
          lst_3 = [value for value in lst_1 if value in lst_2]
          if (len(lst_3) > 0):
             flag = False
@@ -524,30 +433,18 @@ statistics_file.write(_str)
 # ######################################################################################
 
 
-uniprot_of_source_to_flybase_hash = {}
-uniprot_of_target_to_flybase_hash = {}
-all_uniprot_to_flybase_hash = {}
+uniprot_to_flybase_hash = {}
 
-for x in list(set(biogrid_source_to_uniprot_IDs[1])):
-   uniprot_of_source_to_flybase_hash[x] = []
-   all_uniprot_to_flybase_hash[x] = []
+for x in list(set(biogrid_to_uniprot_IDs[1])):
+   uniprot_to_flybase_hash[x] = []
 
-n = len(uniprot_of_source_to_flybase_IDs[0])
+n = len(uniprot_to_flybase_IDs[0])
 for i in range(0, n): 
-   uniprot_of_source_to_flybase_hash[uniprot_of_source_to_flybase_IDs[0][i]].append(uniprot_of_source_to_flybase_IDs[1][i])
-   all_uniprot_to_flybase_hash[uniprot_of_source_to_flybase_IDs[0][i]].append(uniprot_of_source_to_flybase_IDs[1][i])
+   uniprot_to_flybase_hash[uniprot_to_flybase_IDs[0][i]].append(uniprot_to_flybase_IDs[1][i])
 
-for x in list(set(biogrid_target_to_uniprot_IDs[1])):
-   uniprot_of_target_to_flybase_hash[x] = []
-   all_uniprot_to_flybase_hash[x] = []
 
-n = len(uniprot_of_target_to_flybase_IDs[0])
-for i in range(0, n): 
-   uniprot_of_target_to_flybase_hash[uniprot_of_target_to_flybase_IDs[0][i]].append(uniprot_of_target_to_flybase_IDs[1][i])
-   all_uniprot_to_flybase_hash[uniprot_of_target_to_flybase_IDs[0][i]].append(uniprot_of_target_to_flybase_IDs[1][i])
-
-_temp = list(all_uniprot_to_flybase_hash.keys())
-_str = ('# of all_uniprot_to_flybase_hash_keys_length: ' + str(len(_temp))
+_temp = list(uniprot_to_flybase_hash.keys())
+_str = ('# of uniprot_to_flybase_hash_keys_length: ' + str(len(_temp))
 + ', and unique: ' + str(len(list(set(_temp)))))
 print(_str)
 statistics_file.write(_str)
@@ -558,16 +455,16 @@ uniprot_entries_having_the_same_corresponding_map_in_flybase = []
 
 all_counter = [0, 0]
 no_intersection_counter = [0, 0]
-for key in all_uniprot_to_flybase_hash:
-   lst_1 = list(set(all_uniprot_to_flybase_hash[key]))
+for key in uniprot_to_flybase_hash:
+   lst_1 = list(set(uniprot_to_flybase_hash[key]))
    if (len(lst_1) == 1):
       all_counter[0] += 1
    if (len(lst_1) > 1):
       all_counter[1] += 1
    flag = True
-   for key_2 in all_uniprot_to_flybase_hash:      
+   for key_2 in uniprot_to_flybase_hash:      
       if (key != key_2):
-         lst_2 = list(set(all_uniprot_to_flybase_hash[key_2]))
+         lst_2 = list(set(uniprot_to_flybase_hash[key_2]))
          lst_3 = [value for value in lst_1 if value in lst_2]
          if (len(lst_3) > 0):
             flag = False
@@ -608,30 +505,17 @@ statistics_file.write(_str)
 # ######################################################################################
 
 
-biogrid_source_to_flybase_hash = {}
-biogrid_target_to_flybase_hash = {}
-all_biogrid_to_flybase_hash = {}
+biogrid_to_flybase_hash = {}
 
-for x in list(set(biogrid_source_to_uniprot_IDs[0])):
-   biogrid_source_to_flybase_hash[x] = []
-   all_biogrid_to_flybase_hash[x] = []
+for x in list(set(all_unique_proteins_in_biogrid)):
+   biogrid_to_flybase_hash[x] = []
 
-for x in list(set(biogrid_source_to_uniprot_IDs[0])):
-   for y in biogrid_source_to_uniprot_hash[x]:
-      biogrid_source_to_flybase_hash[x].extend(uniprot_of_source_to_flybase_hash[y])
-      all_biogrid_to_flybase_hash[x].extend(uniprot_of_source_to_flybase_hash[y])
+for x in list(set(biogrid_to_uniprot_IDs[0])):
+   for y in biogrid_to_uniprot_hash[x]:
+      biogrid_to_flybase_hash[x].extend(uniprot_to_flybase_hash[y])
 
-for x in list(set(biogrid_target_to_uniprot_IDs[0])):
-   biogrid_target_to_flybase_hash[x] = []
-   all_biogrid_to_flybase_hash[x] = []
-
-for x in list(set(biogrid_target_to_uniprot_IDs[0])):
-   for y in biogrid_target_to_uniprot_hash[x]:
-      biogrid_target_to_flybase_hash[x].extend(uniprot_of_target_to_flybase_hash[y])
-      all_biogrid_to_flybase_hash[x].extend(uniprot_of_target_to_flybase_hash[y])
-
-_temp = list(all_biogrid_to_flybase_hash.keys())
-_str = ('# of all_biogrid_to_flybase_hash_keys_length: ' + str(len(_temp))
+_temp = list(biogrid_to_flybase_hash.keys())
+_str = ('# of biogrid_to_flybase_hash_keys_length: ' + str(len(_temp))
 + ', and unique: ' + str(len(list(set(_temp)))))
 print(_str)
 statistics_file.write(_str)
@@ -642,16 +526,16 @@ biogrid_proteins_having_the_same_corresponding_map_in_flybase = []
 
 all_counter = [0, 0]
 no_intersection_counter = [0, 0]
-for key in all_biogrid_to_flybase_hash:
-   lst_1 = list(set(all_biogrid_to_flybase_hash[key]))
+for key in biogrid_to_flybase_hash:
+   lst_1 = list(set(biogrid_to_flybase_hash[key]))
    if (len(lst_1) == 1):
       all_counter[0] += 1
    if (len(lst_1) > 1):
       all_counter[1] += 1
    flag = True
-   for key_2 in all_biogrid_to_flybase_hash:      
+   for key_2 in biogrid_to_flybase_hash:      
       if (key != key_2):
-         lst_2 = list(set(all_biogrid_to_flybase_hash[key_2]))
+         lst_2 = list(set(biogrid_to_flybase_hash[key_2]))
          lst_3 = [value for value in lst_1 if value in lst_2]
          if (len(lst_3) > 0):
             flag = False
@@ -695,12 +579,12 @@ statistics_file.write(_str)
 counter_0 = 0
 counter_1 = 0
 counter_geq_2 = 0
-for key in all_biogrid_to_uniprot_hash:
-   if (len(list(set(all_biogrid_to_uniprot_hash[key]))) == 0):
+for key in biogrid_to_uniprot_hash:
+   if (len(list(set(biogrid_to_uniprot_hash[key]))) == 0):
       counter_0 += 1
-   elif (len(list(set(all_biogrid_to_uniprot_hash[key]))) == 1):
+   elif (len(list(set(biogrid_to_uniprot_hash[key]))) == 1):
       counter_1 += 1
-   elif (len(list(set(all_biogrid_to_uniprot_hash[key]))) > 1):
+   elif (len(list(set(biogrid_to_uniprot_hash[key]))) > 1):
       counter_geq_2 += 1
 
 _str = ('The statistics about how biogrid proeins are mapped to UniProt IDs: ' + '\n' 
@@ -719,13 +603,13 @@ statistics_file.write(_str)
 counter_0 = 0
 counter_1 = 0
 counter_geq_2 = 0
-for key in all_uniprot_to_flybase_hash:
-   if (len(list(set(all_uniprot_to_flybase_hash[key]))) > 1):
+for key in uniprot_to_flybase_hash:
+   if (len(list(set(uniprot_to_flybase_hash[key]))) > 1):
       counter_geq_2 += 1
-      # print(key, all_uniprot_to_flybase_hash[key])
-   if (len(list(set(all_uniprot_to_flybase_hash[key]))) == 0):
+      # print(key, uniprot_to_flybase_hash[key])
+   if (len(list(set(uniprot_to_flybase_hash[key]))) == 0):
       counter_0 += 1
-   if (len(list(set(all_uniprot_to_flybase_hash[key]))) == 1):
+   if (len(list(set(uniprot_to_flybase_hash[key]))) == 1):
       counter_1 += 1
 
 # print(len(uniprot_of_source_to_flybase_IDs[1]))
@@ -750,18 +634,18 @@ counter_geq_2 = 0
 biogrid_proteins_mapped_to_exactly_one_unique_ID = [[],[]]
 unique_biogrid_to_flybase_hash = {}
 _geq_2_list = []
-for key in all_biogrid_to_flybase_hash:
-   if (len(list(set(all_biogrid_to_flybase_hash[key]))) > 1):
+for key in biogrid_to_flybase_hash:
+   if (len(list(set(biogrid_to_flybase_hash[key]))) > 1):
       counter_geq_2 += 1
-      _geq_2_list.extend(list(set(all_biogrid_to_flybase_hash[key])))
-      # print(key, all_biogrid_to_flybase_hash[key])
-   if (len(list(set(all_biogrid_to_flybase_hash[key]))) == 0):
+      _geq_2_list.extend(list(set(biogrid_to_flybase_hash[key])))
+      # print(key, biogrid_to_flybase_hash[key])
+   if (len(list(set(biogrid_to_flybase_hash[key]))) == 0):
       counter_0 += 1
-   if (len(list(set(all_biogrid_to_flybase_hash[key]))) == 1):
+   if (len(list(set(biogrid_to_flybase_hash[key]))) == 1):
       counter_1 += 1
-      unique_biogrid_to_flybase_hash[key] = all_biogrid_to_flybase_hash[key][0]
+      unique_biogrid_to_flybase_hash[key] = biogrid_to_flybase_hash[key][0]
       biogrid_proteins_mapped_to_exactly_one_unique_ID[0].append(key)
-      biogrid_proteins_mapped_to_exactly_one_unique_ID[1].append(all_biogrid_to_flybase_hash[key][0])
+      biogrid_proteins_mapped_to_exactly_one_unique_ID[1].append(biogrid_to_flybase_hash[key][0])
       # It is possible that some proteins in bioGrid dataset are mapped into multiple IDs in uniprot. And only one of the many
       # uniprot IDs is mapped to a ID in flybase. We assume this ptoreing to be mapped to one unique ID in flybase.
 

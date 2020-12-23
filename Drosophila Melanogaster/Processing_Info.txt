@@ -8,4 +8,6 @@ IntAct:
 
 OGEE: Completely processed
 
-DEG:
+DEG: Completely processed
+
+OGEE - DEG: Completely processed and combined
