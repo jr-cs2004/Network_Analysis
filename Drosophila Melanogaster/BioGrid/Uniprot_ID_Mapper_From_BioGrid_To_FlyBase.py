@@ -299,31 +299,10 @@ statistics_file.write(_str)
 # ######################################################################################
 # ######################################################################################
 
-# temp
-print('temp 1')
-temp_File = open('temp.txt', 'w')
-
-n = len(uniprot_to_flybase_IDs[0])
-for i in range(0, n):
-   temp_File.write(uniprot_to_flybase_IDs[0][i] + '\t' + uniprot_to_flybase_IDs[1][i] + '\n')
-   if (uniprot_to_flybase_IDs[1][i] == 'FBgn0261360'):
-      print(str(i), '\t', uniprot_to_flybase_IDs[0][i])
-      
-n = len(biogrid_to_uniprot_IDs[0])
-for i in range(0, n):
-   temp_File.write(biogrid_to_uniprot_IDs[0][i] + '\t' + biogrid_to_uniprot_IDs[1][i] + '\n')
-   if (biogrid_to_uniprot_IDs[1][i] == 'A4V243_DROME'):
-      print(str(i), '\t', biogrid_to_uniprot_IDs[0][i])
-quit()
-
-# ######################################################################################
-# ######################################################################################
-# ######################################################################################
-
 # we only use the PPIs of which both source and target genes are presented in the OGEE
 # and DEG data
 
-OGEE_File = open("../OGEE/7227_processed.txt", "r")
+OGEE_File = open("../DEG_OGEE_combined_data.txt", "r")
 list_of_valid_genes = []
 for line in OGEE_File:
     list_of_valid_genes.append(line.split()[0])
@@ -656,8 +635,11 @@ _str = ('The statistics about how BioGrid IDs are mapped to FlyBase IDs: ' + '\n
 print(_str)
 statistics_file.write(_str)
 
-# print(len(biogrid_proteins_mapped_to_exactly_one_unique_ID[0]))
-# print(len(list(set(biogrid_proteins_mapped_to_exactly_one_unique_ID[0]))))
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
 
 _counter = 0
 for x in biogrid_proteins_mapped_to_exactly_one_unique_ID[1]:

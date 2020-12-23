@@ -1,0 +1,110 @@
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 42940
+# of lines in the PPI files read for target interacting proteins: 42940
+# of unique proteins in the source lines: 7442
+# of unique proteins in the target lines: 8814
+# of all_unique_proteins_in_intact: 11301
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 42940
+# of lines in the PPI files read for target interacting proteins: 42940
+# of unique proteins in the source lines: 7442
+# of unique proteins in the target lines: 8814
+# of all_unique_proteins_in_intact: 11301
+IntAct IDs are mapped to flybase IDs:
+# of IDs returned by uniprot Mapper: 
+Source: 
+from: 7205, and to: 7205, and uniques --> from: 7083, and to: 6621
+# of IDs returned by uniprot Mapper: 
+Target: 
+from: 8351, and to: 8351, and uniques --> from: 8222, and to: 7587
+# of all_intact_proteins_having_at_least_an_ID_in_flybase: 10486
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 9317
+# of all_intact_to_flybase_hash_keys_length: 11301, and unique: 11301
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 42940
+# of lines in the PPI files read for target interacting proteins: 42940
+# of unique proteins in the source lines: 7442
+# of unique proteins in the target lines: 8814
+# of all_unique_proteins_in_intact: 11301
+IntAct IDs are mapped to flybase IDs:
+# of IDs returned by uniprot Mapper: 
+Source: 
+from: 7205, and to: 7205, and uniques --> from: 7083, and to: 6621
+# of IDs returned by uniprot Mapper: 
+Target: 
+from: 8351, and to: 8351, and uniques --> from: 8222, and to: 7587
+# of all_intact_proteins_having_at_least_an_ID_in_flybase: 10486
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 9317
+# of all_intact_to_flybase_hash_keys_length: 11301, and unique: 11301
+# of intact_proteins_having_no_intersection_in_their_corresponding_map_in_flybase: 8197, and uniques: 8197
+# of intact_proteins_having_intersection_in_their_corresponding_map_in_flybase: 3528, and uniques: 2289
+# of intact_proteins_having_the_same_corresponding_map_in_flybase: 3528, and uniques: 2289
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 42940
+# of lines in the PPI files read for target interacting proteins: 42940
+# of unique proteins in the source lines: 7442
+# of unique proteins in the target lines: 8814
+# of all_unique_proteins_in_intact: 11301
+IntAct IDs are mapped to flybase IDs:
+# of IDs returned by uniprot Mapper: 
+Source: 
+from: 7205, and to: 7205, and uniques --> from: 7083, and to: 6621
+# of IDs returned by uniprot Mapper: 
+Target: 
+from: 8351, and to: 8351, and uniques --> from: 8222, and to: 7587
+# of all_intact_proteins_having_at_least_an_ID_in_flybase: 10486
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 9317
+# of all_intact_to_flybase_hash_keys_length: 11301, and unique: 11301
+# of intact_proteins_having_no_intersection_in_their_corresponding_map_in_flybase: 8197, and uniques: 8197
+# of intact_proteins_having_intersection_in_their_corresponding_map_in_flybase: 3528, and uniques: 2289
+# of intact_proteins_having_the_same_corresponding_map_in_flybase: 3528, and uniques: 2289
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 42940
+# of lines in the PPI files read for target interacting proteins: 42940
+# of unique proteins in the source lines: 7442
+# of unique proteins in the target lines: 8814
+# of all_unique_proteins_in_intact: 11301
+IntAct IDs are mapped to flybase IDs:
+# of IDs returned by uniprot Mapper: 
+Source: 
+from: 7205, and to: 7205, and uniques --> from: 7083, and to: 6621
+# of IDs returned by uniprot Mapper: 
+Target: 
+from: 8351, and to: 8351, and uniques --> from: 8222, and to: 7587
+# of all_intact_proteins_having_at_least_an_ID_in_flybase: 10486
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 9317
+# of all_intact_to_flybase_hash_keys_length: 11301, and unique: 11301
+# of intact_proteins_having_no_intersection_in_their_corresponding_map_in_flybase: 8197, and uniques: 8197
+# of intact_proteins_having_intersection_in_their_corresponding_map_in_flybase: 3528, and uniques: 2289
+# of intact_proteins_having_the_same_corresponding_map_in_flybase: 3528, and uniques: 2289
+The statistics about how IntAct proeins are mapped to FlyBase IDs:
+# of proteins having no corresponding ID: 815
+# of proteins mapped to exactly one ID: 10451
+# of proteins having more than one corresponding ID: 35
+# of unique proteins having only one corresponding flybase ID: 8172, and unique: 8172
+# of interactions using flybase ID: 24250
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 42940
+# of lines in the PPI files read for target interacting proteins: 42940
+# of unique proteins in the source lines: 7442
+# of unique proteins in the target lines: 8814
+# of all_unique_proteins_in_intact: 11301
+IntAct IDs are mapped to flybase IDs:
+# of IDs returned by uniprot Mapper: 
+Source: 
+from: 7205, and to: 7205, and uniques --> from: 7083, and to: 6621
+# of IDs returned by uniprot Mapper: 
+Target: 
+from: 8351, and to: 8351, and uniques --> from: 8222, and to: 7587
+# of all_intact_proteins_having_at_least_an_ID_in_flybase: 10486
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 9317
+# of all_intact_to_flybase_hash_keys_length: 11301, and unique: 11301
+# of intact_proteins_having_no_intersection_in_their_corresponding_map_in_flybase: 8197, and uniques: 8197
+# of intact_proteins_having_intersection_in_their_corresponding_map_in_flybase: 3528, and uniques: 2289
+# of intact_proteins_having_the_same_corresponding_map_in_flybase: 3528, and uniques: 2289
+The statistics about how IntAct proeins are mapped to FlyBase IDs:
+# of proteins having no corresponding ID: 815
+# of proteins mapped to exactly one ID: 10451
+# of proteins having more than one corresponding ID: 35
+# of unique proteins having only one corresponding flybase ID: 10451, and unique: 10451
+# of interactions using flybase ID: 39352
