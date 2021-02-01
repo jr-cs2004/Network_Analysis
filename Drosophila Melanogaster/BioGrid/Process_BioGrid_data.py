@@ -81,7 +81,6 @@ def remove_uniprot_entries_mapping_to_the_different_flybase_IDs(uniprot_of_sourc
 def combine_biogrid_to_uniprot_and_uniprot_to_flybase(biogrid_source_to_uniprot_IDs, uniprot_of_source_to_flybase_IDs):
    return []
 
-statistics_file = open('statistics.txt', 'a')
 
 # ######################################################################################
 # ######################################################################################
@@ -112,6 +111,15 @@ statistics_file = open('statistics.txt', 'a')
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
+
+
+statistics_file = open('statistics.txt', 'a')
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
 
 # First we must read the list of all interactions from a BioGrid dataset
 # All intercations are stored in two lists each containing one end of each interaction.
@@ -245,6 +253,39 @@ statistics_file.write(_str)
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
+
+# writing PPIs with their corresponding UniPropt ID into a file.
+
+_hash = {}
+
+n = len(biogrid_to_uniprot_IDs[0])
+for i in range(0, n):
+   _hash[biogrid_to_uniprot_IDs[0][i]] = []
+for i in range(0, n):
+   _hash[biogrid_to_uniprot_IDs[0][i]].append(biogrid_to_uniprot_IDs[1][i])
+counter_0 = 0
+counter_1 = 0
+counter_geq_2 = 0
+for key in _hash:
+   if (len(list(set(_hash[key]))) == 0):
+      counter_0 += 1
+   if (len(list(set(_hash[key]))) == 1):
+      counter_1 += 1
+   if (len(list(set(_hash[key]))) > 1):
+      counter_geq_2 += 1
+print(counter_0, counter_1, counter_geq_2)
+n = len(biogrid_source_protein_IDs)
+with open('BioGrid.PPIs.txt', 'a') as _file:
+   for i in range(0, n):
+      if (unique_biogrid_to_flybase_hash.get(biogrid_source_protein_IDs[i], False) and unique_biogrid_to_flybase_hash.get(biogrid_target_protein_IDs[i], False)):
+         _file.write(unique_biogrid_to_flybase_hash[biogrid_source_protein_IDs[i]] + '\t' +
+            unique_biogrid_to_flybase_hash[biogrid_target_protein_IDs[i]] + '\n')
+
+quit()
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
 
 
 _str = ('# of all_biogrid_proteins_having_at_least_an_ID_in_uniprot: '

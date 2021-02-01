@@ -1,3 +1,8 @@
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
+
 import urllib.parse
 import urllib.request
 
@@ -60,15 +65,102 @@ statistics_file.write(_str)
 # ######################################################################################
 # ######################################################################################
 
+# to check if some PPIs are repeated or no,
+# if so, to check how many times each PPI is repeated.
+
+# we ran this part and saw that there is no repeat in HitPredict data and thus made 
+# this part of the code, as commented.
+
+# counter = 0
+# removing_indices = []
+# counter_hash = {}
+# for i in range(0, 100):
+#    counter_hash[i] = 0
+# n = len(hitpredict_source_protein_IDs)
+# for i in range(0, n):
+#    if (i < n): # at each iteration, n may changes
+#       if (i % 100 == 0):
+#          print (round(i / n * 100, 1), '%', end="\r")
+      
+#       source_i = hitpredict_source_protein_IDs[i]
+#       target_i = hitpredict_target_protein_IDs[i]
+#       counter = 0
+#       removing_indices = []
+#       for j in range(0,n):
+#          if(i < j):
+#             source_j = hitpredict_source_protein_IDs[j]
+#             target_j = hitpredict_target_protein_IDs[j]     
+#             if ( (source_i == source_j and target_i == target_j) or (source_i == target_j and source_j == target_i)):
+#                removing_indices.append(j)
+#                counter += 1
+#       for indx in sorted(removing_indices, reverse = True):
+#          del hitpredict_source_protein_IDs[indx] 
+#          del hitpredict_target_protein_IDs[indx]
+#       n = len(hitpredict_source_protein_IDs)
+#       counter_hash[counter] = counter_hash[counter] + 1
+
+# # print(len(removing_indices))
+# # print(len(list(set(removing_indices))))
+
+# n = len(hitpredict_source_protein_IDs)
+# with open('PPI_without_repeats.txt', 'w') as _file:
+#    for i in range(0, n):
+#       _file.write(hitpredict_source_protein_IDs[i] + '\t' + hitpredict_target_protein_IDs[i] + '\n')
+
+# with open('Repeats_statistics.txt', 'w') as _file:
+#    for key in counter_hash:
+#       _file.write(str(key) + '\t' + str(counter_hash[key]) + '\n')
+# quit()
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
+# writing PPIs with no repeat into a file
+
+n = len(hitpredict_source_protein_IDs)
+with open('HitPredict.PPIs.txt', 'w') as _file:
+   for i in range(0, n):
+      _file.write(hitpredict_source_protein_IDs[i] + '\t' + hitpredict_target_protein_IDs[i] + '\n')
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
 
 all_unique_proteins_in_hitpredict = []
 all_unique_proteins_in_hitpredict.extend(hitpredict_source_protein_IDs)
 all_unique_proteins_in_hitpredict.extend(hitpredict_target_protein_IDs)
-
-_str = '# of all_unique_proteins_in_hitpredict: ' + str(len(list(set(all_unique_proteins_in_hitpredict)))) + '\n'
+all_unique_proteins_in_hitpredict = list(set(all_unique_proteins_in_hitpredict))
+_str = '# of all_unique_proteins_in_hitpredict: ' + str(len(all_unique_proteins_in_hitpredict)) + '\n'
 print(_str)
 statistics_file.write(_str)
 
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+# temp
+all_UniProt_IDs_File = open("../UniProt Data/All_UniProt_IDs.list", "r")
+all_UniProt_IDs = []
+for line in all_UniProt_IDs_File:
+   all_UniProt_IDs.append(line.split()[0])
+
+print(len(all_UniProt_IDs))
+print(len(list(set(all_UniProt_IDs))))
+
+counter = 0
+n = len(all_unique_proteins_in_hitpredict)
+for x in all_unique_proteins_in_hitpredict:
+   if x in all_UniProt_IDs:
+      counter += 1
+   else:
+      print(x)
+print(counter)
+quit()
 
 # ######################################################################################
 # ######################################################################################
@@ -84,25 +176,13 @@ statistics_file.write(_str)
 
 print('converting hitpredict IDs to uniprot IDs...\n')
 
-query = ' '.join(hitpredict_source_protein_IDs)
-hitpredict_source_to_flybase_IDs = convertIDs(query, 'ID', 'FLYBASE_ID')
+query = ' '.join(all_unique_proteins_in_hitpredict)
+hitpredict_to_flybase_IDs = convertIDs(query, 'ID', 'FLYBASE_ID')
 
 _str = ('IntAct IDs are mapped to flybase IDs:' + '\n'
 + '# of IDs returned by uniprot Mapper: ' + '\n'
-+ 'Source: ' + '\n'
-+ 'from: ' + str(len(hitpredict_source_to_flybase_IDs[0]))  + ', and to: ' +  str(len(hitpredict_source_to_flybase_IDs[1]))
-+ ', and uniques --> from: ' + str(len(list(set(hitpredict_source_to_flybase_IDs[0])))) +', and to: ' +  str(len(list(set(hitpredict_source_to_flybase_IDs[1])))) + '\n')
-print(_str)
-statistics_file.write(_str)
-
-query = ' '.join(hitpredict_target_protein_IDs)
-hitpredict_target_to_flybase_IDs = convertIDs(query, 'ID', 'FLYBASE_ID')
-
-_str = ('IntAct IDs are mapped to flybase IDs:' + '\n'
-+ '# of IDs returned by uniprot Mapper: ' + '\n'
-+ 'Target: ' + '\n'
-+ 'from: ' + str(len(hitpredict_target_to_flybase_IDs[0]))  + ', and to: ' +  str(len(hitpredict_target_to_flybase_IDs[1]))
-+ ', and uniques --> from: ' + str(len(list(set(hitpredict_target_to_flybase_IDs[0]))))  + ', and to: ' +  str(len(list(set(hitpredict_target_to_flybase_IDs[1])))) + '\n')
++ 'from: ' + str(len(hitpredict_to_flybase_IDs[0]))  + ', and to: ' +  str(len(hitpredict_to_flybase_IDs[1]))
++ ', and uniques --> from: ' + str(len(list(set(hitpredict_to_flybase_IDs[0])))) +', and to: ' +  str(len(list(set(hitpredict_to_flybase_IDs[1])))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
@@ -111,65 +191,43 @@ statistics_file.write(_str)
 # ######################################################################################
 # ######################################################################################
 
-
-all_hitpredict_proteins_having_at_least_an_ID_in_flybase = []
-all_hitpredict_proteins_having_at_least_an_ID_in_flybase.extend(hitpredict_source_to_flybase_IDs[0])
-all_hitpredict_proteins_having_at_least_an_ID_in_flybase.extend(hitpredict_target_to_flybase_IDs[0])
-
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase = []
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(hitpredict_source_to_flybase_IDs[1])
-all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase.extend(hitpredict_target_to_flybase_IDs[1])
 
 _str = ('# of all_hitpredict_proteins_having_at_least_an_ID_in_flybase: '
-+ str(len(list(set(all_hitpredict_proteins_having_at_least_an_ID_in_flybase)))) + '\n'
++ str(len(list(set(hitpredict_to_flybase_IDs[0])))) + '\n'
 + '# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: '
-+ str(len(list(set(all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase)))) + '\n')
++ str(len(list(set(hitpredict_to_flybase_IDs[1])))) + '\n')
 print(_str)
 statistics_file.write(_str)
 
+
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
 
 
-hitpredict_source_to_flybase_hash = {}
-hitpredict_target_to_flybase_hash = {}
-all_hitpredict_to_flybase_hash = {}
+hitpredict_to_flybase_hash = {}
 
-# for x in list(set(hitpredict_source_to_flybase_IDs[0])):
-for x in list(set(hitpredict_source_protein_IDs)):
-   hitpredict_source_to_flybase_hash[x] = []
-   all_hitpredict_to_flybase_hash[x] = []
+for x in list(set(all_unique_proteins_in_hitpredict)):
+   hitpredict_to_flybase_hash[x] = []
 
-n = len(hitpredict_source_to_flybase_IDs[0])
+n = len(hitpredict_to_flybase_IDs[0])
 for i in range(0, n): 
-   hitpredict_source_to_flybase_hash[hitpredict_source_to_flybase_IDs[0][i]].append(hitpredict_source_to_flybase_IDs[1][i])
-   all_hitpredict_to_flybase_hash[hitpredict_source_to_flybase_IDs[0][i]].append(hitpredict_source_to_flybase_IDs[1][i])
+   hitpredict_to_flybase_hash[hitpredict_to_flybase_IDs[0][i]].append(hitpredict_to_flybase_IDs[1][i])
 
-# for x in list(set(hitpredict_target_to_flybase_IDs[0])):
-for x in list(set(hitpredict_target_protein_IDs)):
-   hitpredict_target_to_flybase_hash[x] = []
-   all_hitpredict_to_flybase_hash[x] = []
-
-n = len(hitpredict_target_to_flybase_IDs[0])
-for i in range(0, n): 
-   hitpredict_target_to_flybase_hash[hitpredict_target_to_flybase_IDs[0][i]].append(hitpredict_target_to_flybase_IDs[1][i])
-   all_hitpredict_to_flybase_hash[hitpredict_target_to_flybase_IDs[0][i]].append(hitpredict_target_to_flybase_IDs[1][i])
-
-_temp = list(all_hitpredict_to_flybase_hash.keys())
-_str = ('# of all_hitpredict_to_flybase_hash_keys_length: ' + str(len(_temp))
-+ ', and unique: ' + str(len(list(set(_temp)))))
-print(_str)
-statistics_file.write(_str)
+# _temp = list(hitpredict_to_flybase_hash.keys())
+# _str = ('# of hitpredict_to_flybase_hash_keys_length: ' + str(len(_temp))
+# + ', and unique: ' + str(len(list(set(_temp)))))
+# print(_str)
+# statistics_file.write(_str)
 
 hitpredict_proteins_having_no_intersection_in_their_corresponding_map_in_flybase = []
 hitpredict_proteins_having_intersection_in_their_corresponding_map_in_flybase = []
 hitpredict_proteins_having_the_same_corresponding_map_in_flybase = []
-for key in all_hitpredict_to_flybase_hash:
-   lst_1 = list(set(all_hitpredict_to_flybase_hash[key]))
+for key in hitpredict_to_flybase_hash:
+   lst_1 = list(set(hitpredict_to_flybase_hash[key]))
    flag = True
-   for key_2 in all_hitpredict_to_flybase_hash:
-      lst_2 = list(set(all_hitpredict_to_flybase_hash[key_2]))
+   for key_2 in hitpredict_to_flybase_hash:
+      lst_2 = list(set(hitpredict_to_flybase_hash[key_2]))
       if (key != key_2):
          lst_3 = [value for value in lst_1 if value in lst_2]
          if (len(lst_3) > 0):
@@ -207,20 +265,21 @@ statistics_file.write(_str)
 counter_0 = 0
 counter_1 = 0
 counter_geq_2 = 0
+of_proteins_having_only_one_corresponding_flybase_ID = 0
 hitpredict_proteins_mapped_to_exactly_one_unique_ID = [[],[]]
 unique_hitpredict_to_flybase_hash = {}
 
-for key in all_hitpredict_to_flybase_hash:
-   if (len(list(set(all_hitpredict_to_flybase_hash[key]))) == 0):
+for key in hitpredict_to_flybase_hash:
+   if (len(list(set(hitpredict_to_flybase_hash[key]))) == 0):
       counter_0 += 1
-   elif (len(list(set(all_hitpredict_to_flybase_hash[key]))) == 1):
+   elif (len(list(set(hitpredict_to_flybase_hash[key]))) == 1):
       counter_1 += 1
       if (key in hitpredict_proteins_having_no_intersection_in_their_corresponding_map_in_flybase):
-         unique_hitpredict_to_flybase_hash[key] = all_hitpredict_to_flybase_hash[key][0]
-         hitpredict_proteins_mapped_to_exactly_one_unique_ID[0].append(key)
-         hitpredict_proteins_mapped_to_exactly_one_unique_ID[1].append(all_hitpredict_to_flybase_hash[key][0])
-
-   elif (len(list(set(all_hitpredict_to_flybase_hash[key]))) > 1):
+         of_proteins_having_only_one_corresponding_flybase_ID += 1
+      unique_hitpredict_to_flybase_hash[key] = hitpredict_to_flybase_hash[key][0]
+      hitpredict_proteins_mapped_to_exactly_one_unique_ID[0].append(key)
+      hitpredict_proteins_mapped_to_exactly_one_unique_ID[1].append(hitpredict_to_flybase_hash[key][0])
+   elif (len(list(set(hitpredict_to_flybase_hash[key]))) > 1):
       counter_geq_2 += 1
       
 _str = ('The statistics about how HitPredict proeins are mapped to FlyBase IDs: ' + '\n' 
@@ -230,41 +289,70 @@ _str = ('The statistics about how HitPredict proeins are mapped to FlyBase IDs: 
 print(_str)
 statistics_file.write(_str)
 
-_str = ('# of unique proteins having only one corresponding flybase ID: '
-+ str(len(hitpredict_proteins_mapped_to_exactly_one_unique_ID[0]))
-+ ', and unique: ' + str(len(list(set(hitpredict_proteins_mapped_to_exactly_one_unique_ID[0])))) + '\n')
+_str = ('# of_proteins_having_only_one_corresponding_flybase_ID: '
++ str(of_proteins_having_only_one_corresponding_flybase_ID) + '\n')
 print(_str)
 statistics_file.write(_str)
 
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
+
 _counter = 0
-for x in hitpredict_proteins_mapped_to_exactly_one_unique_ID[1]:
+n = len(hitpredict_proteins_mapped_to_exactly_one_unique_ID[1])
+for i in range(0, n):
    counter = 0
-   for y in hitpredict_proteins_mapped_to_exactly_one_unique_ID[1]:
-      if (x == y):
+   for j in range(0, n):
+      if (i < j and hitpredict_proteins_mapped_to_exactly_one_unique_ID[1][i] == hitpredict_proteins_mapped_to_exactly_one_unique_ID[1][j]):
          counter += 1
    if (counter > 1):
       _counter += 1
 print(_counter)
 
 n = len(hitpredict_proteins_mapped_to_exactly_one_unique_ID[0])
-with open('output.txt', 'a') as _file:
+with open('Mapping.UniProt.ID.to.FlyBase.ID.txt', 'w') as _file:
    for i in range(0, n):
       _file.write(hitpredict_proteins_mapped_to_exactly_one_unique_ID[0][i] + '\t' + hitpredict_proteins_mapped_to_exactly_one_unique_ID[1][i] + '\n')
 
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
+
+DEG_OGEE_combined_data_File = open('../DEG_OGEE_combined_data.txt', 'r')
+list_of_valid_genes = []
+for line in DEG_OGEE_combined_data_File:
+    list_of_valid_genes.append(line.split()[0])
+print(len(list(set(list_of_valid_genes))))
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
+
+
 n = len(hitpredict_source_protein_IDs)
-counter = 0
-with open('hitpredict.PPI.Network.using.flybase.IDs.txt', 'a') as _file:
-   for i in range(0, n):
-      if (unique_hitpredict_to_flybase_hash.get(hitpredict_source_protein_IDs[i], False) and unique_hitpredict_to_flybase_hash.get(hitpredict_target_protein_IDs[i], False)):
-         _file.write(unique_hitpredict_to_flybase_hash[hitpredict_source_protein_IDs[i]] + '\t' +
-            unique_hitpredict_to_flybase_hash[hitpredict_target_protein_IDs[i]] + '\n')
-         counter += 1
+counter_GGIs = 0
+counter_filtered_GGIs = 0
+GGIs_file = open('HitPredict.GGIs.txt', 'w')
+filtered_GGIs_file = open('HitPredict.GGIs.Filtered.By.Essentiality.Information.txt', 'w')
+unique_genes_in_GGIs = []
+unique_genes_in_filtered_GGIs = []
+for i in range(0, n):
+   if (unique_hitpredict_to_flybase_hash.get(hitpredict_source_protein_IDs[i], False) and unique_hitpredict_to_flybase_hash.get(hitpredict_target_protein_IDs[i], False)):
+      GGIs_file.write(unique_hitpredict_to_flybase_hash[hitpredict_source_protein_IDs[i]] + '\t' + unique_hitpredict_to_flybase_hash[hitpredict_target_protein_IDs[i]] + '\n')
+      unique_genes_in_GGIs.append(unique_hitpredict_to_flybase_hash[hitpredict_source_protein_IDs[i]])
+      unique_genes_in_GGIs.append(unique_hitpredict_to_flybase_hash[hitpredict_target_protein_IDs[i]])
+      counter_GGIs += 1
+   if (unique_hitpredict_to_flybase_hash.get(hitpredict_source_protein_IDs[i], False) and unique_hitpredict_to_flybase_hash.get(hitpredict_target_protein_IDs[i], False) 
+      and (unique_hitpredict_to_flybase_hash[hitpredict_source_protein_IDs[i]] in list_of_valid_genes) and (unique_hitpredict_to_flybase_hash[hitpredict_target_protein_IDs[i]] in list_of_valid_genes)):
+      filtered_GGIs_file.write(unique_hitpredict_to_flybase_hash[hitpredict_source_protein_IDs[i]] + '\t' + unique_hitpredict_to_flybase_hash[hitpredict_target_protein_IDs[i]] + '\n')
+      unique_genes_in_filtered_GGIs.append(unique_hitpredict_to_flybase_hash[hitpredict_source_protein_IDs[i]])
+      unique_genes_in_filtered_GGIs.append(unique_hitpredict_to_flybase_hash[hitpredict_target_protein_IDs[i]])
+      counter_filtered_GGIs += 1
 
-_str = ('# of interactions using flybase ID: ' + str(counter) + '\n')
-print(_str)
-statistics_file.write(_str)
-
-
-# ######################################################################################
-# ######################################################################################
-# ######################################################################################
+print(counter_GGIs, counter_filtered_GGIs)
+print(len(list(set(unique_genes_in_GGIs))), len(list(set(unique_genes_in_filtered_GGIs))))

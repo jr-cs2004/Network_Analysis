@@ -86,7 +86,7 @@ print('# of interactions in the proccessed PPIs: ', len(droid_source_protein_IDs
 
 # we only use the PPIs of which both source and target genes are presented in the OGEE
 # and DEG data
-OGEE_File = open("../OGEE/7227_processed.txt", "r")
+OGEE_File = open("../DEG_OGEE_combined_data.txt", "r")
 list_of_valid_genes = []
 for line in OGEE_File:
     list_of_valid_genes.append(line.split()[0])
@@ -102,12 +102,19 @@ for i in range(0, n):
 print(len(removing_indices))
 print('# of invalid PPIs: ', len(list(set(removing_indices))))
 
+n = len(droid_source_protein_IDs)
+with open('DroID.GGIs.txt', 'w') as _file:
+   for i in range(0, n):
+      source_i = droid_source_protein_IDs[i]
+      target_i = droid_target_protein_IDs[i]      
+      _file.write(source_i + '\t' + target_i + '\n')
+
 for indx in sorted(removing_indices, reverse = True):  
     del droid_source_protein_IDs[indx] 
     del droid_target_protein_IDs[indx] 
 
 n = len(droid_source_protein_IDs)
-with open('droID.PPI.Network.using.FlyBase.IDs.txt', 'w') as _file:
+with open('DroID.GGIs.Filtered.By.Essentiality.Information.txt', 'w') as _file:
    for i in range(0, n):
       source_i = droid_source_protein_IDs[i]
       target_i = droid_target_protein_IDs[i]      

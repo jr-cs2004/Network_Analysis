@@ -1,0 +1,167 @@
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+# of all_biogrid_proteins_having_at_least_an_ID_in_uniprot: 9420
+# of all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot: 16976
+uniprot IDs are mapped to flybase IDs:
+# of IDs returned by uniprot Mapper: 
+from: 16182, and to: 16182, and uniques --> from: 16051, and to: 9261
+# of all_uniprot_proteins_having_at_least_an_ID_in_flybase: 16051
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 9261
+# of all_uniprot_proteins_having_at_least_an_ID_in_flybase: 13765
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 8370
+# of biogrid_to_uniprot_hash_keys_length: 9635, and unique: 9635# of biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot: 9368, and uniques: 9368
+mapped to exactly on ID: 5663	mapped to more than one ID: 3705# of biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot: 70, and uniques: 52
+# of biogrid_proteins_having_the_same_corresponding_map_in_uniprot: 62, and uniques: 50
+# of uniprot_to_flybase_hash_keys_length: 16976, and unique: 16976# of uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase: 5449, and uniques: 5449
+mapped to exactly on ID: 5431	mapped to more than one ID: 18# of uniprot_entries_having_intersection_in_their_corresponding_map_in_flybase: 31700, and uniques: 8316
+# of uniprot_entries_having_the_same_corresponding_map_in_flybase: 31700, and uniques: 8316
+# of biogrid_to_flybase_hash_keys_length: 9635, and unique: 9635# of biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase: 8216, and uniques: 8216
+mapped to exactly on ID: 8203	mapped to more than one ID: 13# of biogrid_proteins_having_intersection_in_their_corresponding_map_in_flybase: 70, and uniques: 52
+# of biogrid_proteins_having_the_same_corresponding_map_in_flybase: 70, and uniques: 52
+The statistics about how biogrid proeins are mapped to UniProt IDs: 
+# of proteins having no corresponding ID): 215
+# of proteins mapped to exactly one ID): 5683
+# of proteins having more than one corresponding ID): 3737
+The statistics about how uniprot IDs are mapped to FlyBase IDs: 
+# of proteins having no corresponding ID): 3211
+# of proteins mapped to exactly one ID): 13738
+# of proteins having more than one corresponding ID): 27
+The statistics about how BioGrid IDs are mapped to FlyBase IDs: 
+# of proteins having no corresponding ID): 1367
+# of proteins mapped to exactly one ID): 8207
+# of proteins having more than one corresponding ID): 61
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+# of all_biogrid_proteins_having_at_least_an_ID_in_uniprot: 9420
+# of all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot: 16976
+uniprot IDs are mapped to flybase IDs:
+# of IDs returned by uniprot Mapper: 
+from: 16182, and to: 16182, and uniques --> from: 16051, and to: 9261
+# of all_uniprot_proteins_having_at_least_an_ID_in_flybase: 16051
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 9261
+# of all_uniprot_proteins_having_at_least_an_ID_in_flybase: 13765
+# of all_flybase_IDs_obtained_by_mapping_uniprot_to_flybase: 8370
+# of biogrid_to_uniprot_hash_keys_length: 9635, and unique: 9635# of biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_uniprot: 9368, and uniques: 9368
+mapped to exactly on ID: 5663	mapped to more than one ID: 3705# of biogrid_proteins_having_intersection_in_their_corresponding_map_in_uniprot: 70, and uniques: 52
+# of biogrid_proteins_having_the_same_corresponding_map_in_uniprot: 62, and uniques: 50
+# of uniprot_to_flybase_hash_keys_length: 16976, and unique: 16976# of uniprot_entries_having_no_intersection_in_their_corresponding_map_in_flybase: 5449, and uniques: 5449
+mapped to exactly on ID: 5431	mapped to more than one ID: 18# of uniprot_entries_having_intersection_in_their_corresponding_map_in_flybase: 31700, and uniques: 8316
+# of uniprot_entries_having_the_same_corresponding_map_in_flybase: 31700, and uniques: 8316
+# of biogrid_to_flybase_hash_keys_length: 9635, and unique: 9635# of biogrid_proteins_having_no_intersection_in_their_corresponding_map_in_flybase: 8216, and uniques: 8216
+mapped to exactly on ID: 8203	mapped to more than one ID: 13# of biogrid_proteins_having_intersection_in_their_corresponding_map_in_flybase: 70, and uniques: 52
+# of biogrid_proteins_having_the_same_corresponding_map_in_flybase: 70, and uniques: 52
+The statistics about how biogrid proeins are mapped to UniProt IDs: 
+# of proteins having no corresponding ID): 215
+# of proteins mapped to exactly one ID): 5683
+# of proteins having more than one corresponding ID): 3737
+The statistics about how uniprot IDs are mapped to FlyBase IDs: 
+# of proteins having no corresponding ID): 3211
+# of proteins mapped to exactly one ID): 13738
+# of proteins having more than one corresponding ID): 27
+The statistics about how BioGrid IDs are mapped to FlyBase IDs: 
+# of proteins having no corresponding ID): 1367
+# of proteins mapped to exactly one ID): 8207
+# of proteins having more than one corresponding ID): 61
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+# of all_biogrid_proteins_having_at_least_an_ID_in_uniprot: 9420
+# of all_uniprot_IDs_obtained_by_mapping_biogrid_to_uniprot: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
+biogrid IDs are mapped to uniprot IDs:
+# of IDs returned by uniprot Mapper: 
+from: 17027, and to: 17027, and uniques --> from: 9420, and to: 16976
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 65191
+# of lines in the PPI files read for target interacting proteins: 65191
+# of unique proteins in the source lines: 7191
+# of unique proteins in the target lines: 8402
+# of all_unique_proteins_in_biogrid: 9635
