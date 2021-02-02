@@ -45,7 +45,9 @@ statistics_file = open('statistics.txt', 'a')
 
 print('reading interaction file...\n')
 
-hitPredict_File = open("D_melanogaster_interactions_without_header_lines.txt", "r")
+# hitPredict_File = open("D_melanogaster_interactions_without_header_lines.txt", "r")
+hitPredict_File = open("PPI_without_repeats.txt", "r")
+
 hitpredict_source_protein_IDs = []
 hitpredict_target_protein_IDs = []
 for line in hitPredict_File:
@@ -65,13 +67,14 @@ statistics_file.write(_str)
 # ######################################################################################
 # ######################################################################################
 
-# to check if some PPIs are repeated or no,
-# if so, to check how many times each PPI is repeated.
+# # to check if some PPIs are repeated or no,
+# # if so, to check how many times each PPI is repeated.
 
-# we ran this part and saw that there is no repeat in HitPredict data and thus made 
-# this part of the code, as commented.
+# # we ran this part and saw that there is no repeat in HitPredict data and thus made 
+# # this part of the code, as commented.
 
-# counter = 0
+# repeat_counter = 0
+# loop_counter = 0
 # removing_indices = []
 # counter_hash = {}
 # for i in range(0, 100):
@@ -80,11 +83,19 @@ statistics_file.write(_str)
 # for i in range(0, n):
 #    if (i < n): # at each iteration, n may changes
 #       if (i % 100 == 0):
-#          print (round(i / n * 100, 1), '%', end="\r")
+#          print (round(i / n * 100, 1), '%', end='\r', flush=True)
       
 #       source_i = hitpredict_source_protein_IDs[i]
 #       target_i = hitpredict_target_protein_IDs[i]
-#       counter = 0
+
+#       if (source_i == target_i):
+#          loop_counter += 1      
+#          del hitpredict_source_protein_IDs[i] 
+#          del hitpredict_target_protein_IDs[i]
+#          n = len(hitpredict_source_protein_IDs)
+#          continue
+
+#       repeat_counter = 0
 #       removing_indices = []
 #       for j in range(0,n):
 #          if(i < j):
@@ -92,15 +103,19 @@ statistics_file.write(_str)
 #             target_j = hitpredict_target_protein_IDs[j]     
 #             if ( (source_i == source_j and target_i == target_j) or (source_i == target_j and source_j == target_i)):
 #                removing_indices.append(j)
-#                counter += 1
+#                repeat_counter += 1
 #       for indx in sorted(removing_indices, reverse = True):
 #          del hitpredict_source_protein_IDs[indx] 
 #          del hitpredict_target_protein_IDs[indx]
+      
 #       n = len(hitpredict_source_protein_IDs)
-#       counter_hash[counter] = counter_hash[counter] + 1
+#       counter_hash[repeat_counter] = counter_hash[repeat_counter] + 1
 
 # # print(len(removing_indices))
 # # print(len(list(set(removing_indices))))
+
+# print('repeat_counter: ', repeat_counter)
+# print('loop_counter: ', loop_counter)
 
 # n = len(hitpredict_source_protein_IDs)
 # with open('PPI_without_repeats.txt', 'w') as _file:
@@ -110,19 +125,6 @@ statistics_file.write(_str)
 # with open('Repeats_statistics.txt', 'w') as _file:
 #    for key in counter_hash:
 #       _file.write(str(key) + '\t' + str(counter_hash[key]) + '\n')
-# quit()
-
-
-# ######################################################################################
-# ######################################################################################
-# ######################################################################################
-
-# writing PPIs with no repeat into a file
-
-n = len(hitpredict_source_protein_IDs)
-with open('HitPredict.PPIs.txt', 'w') as _file:
-   for i in range(0, n):
-      _file.write(hitpredict_source_protein_IDs[i] + '\t' + hitpredict_target_protein_IDs[i] + '\n')
 
 
 # ######################################################################################
@@ -130,20 +132,21 @@ with open('HitPredict.PPIs.txt', 'w') as _file:
 # ######################################################################################
 
 
-all_unique_proteins_in_hitpredict = []
-all_unique_proteins_in_hitpredict.extend(hitpredict_source_protein_IDs)
-all_unique_proteins_in_hitpredict.extend(hitpredict_target_protein_IDs)
-all_unique_proteins_in_hitpredict = list(set(all_unique_proteins_in_hitpredict))
-_str = '# of all_unique_proteins_in_hitpredict: ' + str(len(all_unique_proteins_in_hitpredict)) + '\n'
+unique_proteins_in_hitpredict = []
+unique_proteins_in_hitpredict.extend(hitpredict_source_protein_IDs)
+unique_proteins_in_hitpredict.extend(hitpredict_target_protein_IDs)
+unique_proteins_in_hitpredict = list(set(unique_proteins_in_hitpredict))
+_str = '# of unique_proteins_in_hitpredict: ' + str(len(unique_proteins_in_hitpredict)) + '\n'
 print(_str)
 statistics_file.write(_str)
 
 
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
 
-# ######################################################################################
-# ######################################################################################
-# ######################################################################################
-# temp
+# counting the number of IDs which are not included in UniProt DB
+
 all_UniProt_IDs_File = open("../UniProt Data/All_UniProt_IDs.list", "r")
 all_UniProt_IDs = []
 for line in all_UniProt_IDs_File:
@@ -152,15 +155,27 @@ for line in all_UniProt_IDs_File:
 print(len(all_UniProt_IDs))
 print(len(list(set(all_UniProt_IDs))))
 
-counter = 0
-n = len(all_unique_proteins_in_hitpredict)
-for x in all_unique_proteins_in_hitpredict:
+node_counter = 0
+n = len(unique_proteins_in_hitpredict)
+for x in unique_proteins_in_hitpredict:
    if x in all_UniProt_IDs:
-      counter += 1
+      node_counter += 1
    else:
       print(x)
-print(counter)
+print('# of protein IDs not included in UniProt database: ', n - node_counter)
+print(node_counter)
+
+edge_counter = 0
+n = len(hitpredict_source_protein_IDs)
+for i in range(0, n):
+   source_i = hitpredict_source_protein_IDs[i]
+   target_i = hitpredict_target_protein_IDs[i]
+   if source_i in all_UniProt_IDs and target_i in all_UniProt_IDs:
+      edge_counter += 1
+print('# of protein-protein interactions of which at least one of the corresponding protein IDs is not included in UniProt database: ', n - edge_counter)
+print(edge_counter)
 quit()
+
 
 # ######################################################################################
 # ######################################################################################
@@ -176,7 +191,7 @@ quit()
 
 print('converting hitpredict IDs to uniprot IDs...\n')
 
-query = ' '.join(all_unique_proteins_in_hitpredict)
+query = ' '.join(unique_proteins_in_hitpredict)
 hitpredict_to_flybase_IDs = convertIDs(query, 'ID', 'FLYBASE_ID')
 
 _str = ('IntAct IDs are mapped to flybase IDs:' + '\n'
@@ -207,7 +222,7 @@ statistics_file.write(_str)
 
 hitpredict_to_flybase_hash = {}
 
-for x in list(set(all_unique_proteins_in_hitpredict)):
+for x in list(set(unique_proteins_in_hitpredict)):
    hitpredict_to_flybase_hash[x] = []
 
 n = len(hitpredict_to_flybase_IDs[0])
