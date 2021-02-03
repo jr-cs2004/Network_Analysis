@@ -37,11 +37,18 @@ counter_2 = 0
 counter_3 = 0
 counter_4 = 0
 counter_5 = 0
+loop_counter = 0
 removing_indices = []
 n = len(droid_source_protein_IDs)
 for i in range(0, n):
    source_i = droid_source_protein_IDs[i]
    target_i = droid_target_protein_IDs[i]
+
+   if (source_i == target_i):
+      loop_counter += 1
+      removing_indices.append(i)
+      continue
+
    temp_counter = 0
    for j in range(0,n):
       source_j = droid_source_protein_IDs[j]
@@ -56,12 +63,14 @@ for i in range(0, n):
       counter_2 += 1
    if (temp_counter == 3):
       counter_3 += 1
-   if (temp_counter == 4):
+   if (temp_counter >= 4):
       counter_4 += 1
-print(counter_1, '   ',counter_2, '   ',counter_3, '   ',counter_4)
+print('# of interactions with replication', counter_1, '   ',counter_2, '   ',counter_3, '   ',counter_4)
 
-print(len(removing_indices))
-print(len(list(set(removing_indices))))
+print('# of self loops: ', loop_counter)
+
+print('# of removing indices: ', len(removing_indices))
+print('# of unique removing indices: ', len(list(set(removing_indices))))
 
 
 # ######################################################################################
