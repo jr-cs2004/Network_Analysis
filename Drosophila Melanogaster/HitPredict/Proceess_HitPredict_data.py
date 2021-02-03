@@ -47,6 +47,7 @@ print('reading interaction file...\n')
 
 # hitPredict_File = open("D_melanogaster_interactions_without_header_lines.txt", "r")
 hitPredict_File = open("PPI_without_repeats.txt", "r")
+# hitPredict_File = open("PPI_without_repeats_intersected_with_All_UniProt_IDs.txt", "r")
 
 hitpredict_source_protein_IDs = []
 hitpredict_target_protein_IDs = []
@@ -147,34 +148,45 @@ statistics_file.write(_str)
 
 # counting the number of IDs which are not included in UniProt DB
 
-all_UniProt_IDs_File = open("../UniProt Data/All_UniProt_IDs.list", "r")
-all_UniProt_IDs = []
-for line in all_UniProt_IDs_File:
-   all_UniProt_IDs.append(line.split()[0])
+# all_UniProt_IDs_File = open("../UniProt Data/All_UniProt_IDs.list", "r")
+# all_UniProt_IDs = []
+# for line in all_UniProt_IDs_File:
+#    all_UniProt_IDs.append(line.split()[0])
 
-print(len(all_UniProt_IDs))
-print(len(list(set(all_UniProt_IDs))))
+# # print(len(all_UniProt_IDs))
+# print(len(list(set(all_UniProt_IDs))))
 
-node_counter = 0
-n = len(unique_proteins_in_hitpredict)
-for x in unique_proteins_in_hitpredict:
-   if x in all_UniProt_IDs:
-      node_counter += 1
-   else:
-      print(x)
-print('# of protein IDs not included in UniProt database: ', n - node_counter)
-print(node_counter)
+# removing_indices = []
+# node_counter = 0
+# n = len(unique_proteins_in_hitpredict)
+# for x in unique_proteins_in_hitpredict:
+#    if x in all_UniProt_IDs:
+#       node_counter += 1
+#    else:
+#       print(x)
+# print('# of protein IDs not included in UniProt database: ', n - node_counter)
+# print(node_counter)
 
-edge_counter = 0
-n = len(hitpredict_source_protein_IDs)
-for i in range(0, n):
-   source_i = hitpredict_source_protein_IDs[i]
-   target_i = hitpredict_target_protein_IDs[i]
-   if source_i in all_UniProt_IDs and target_i in all_UniProt_IDs:
-      edge_counter += 1
-print('# of protein-protein interactions of which at least one of the corresponding protein IDs is not included in UniProt database: ', n - edge_counter)
-print(edge_counter)
-quit()
+# edge_counter = 0
+# n = len(hitpredict_source_protein_IDs)
+# for i in range(0, n):
+#    source_i = hitpredict_source_protein_IDs[i]
+#    target_i = hitpredict_target_protein_IDs[i]
+#    if source_i in all_UniProt_IDs and target_i in all_UniProt_IDs:
+#       edge_counter += 1
+#    else: 
+#       removing_indices.append(i)
+# print('# of protein-protein interactions of which at least one of the corresponding protein IDs is not included in UniProt database: ', n - edge_counter)
+# print(edge_counter)
+
+# for indx in sorted(removing_indices, reverse = True):
+#    del hitpredict_source_protein_IDs[indx] 
+#    del hitpredict_target_protein_IDs[indx]
+
+# n = len(hitpredict_source_protein_IDs)
+# with open('PPI_without_repeats_intersected_with_All_UniProt_IDs.txt', 'w') as _file:
+#    for i in range(0, n):
+#       _file.write(hitpredict_source_protein_IDs[i] + '\t' + hitpredict_target_protein_IDs[i] + '\n')
 
 
 # ######################################################################################
@@ -280,7 +292,7 @@ statistics_file.write(_str)
 counter_0 = 0
 counter_1 = 0
 counter_geq_2 = 0
-of_proteins_having_only_one_corresponding_flybase_ID = 0
+proteins_having_only_one_corresponding_flybase_ID = 0
 hitpredict_proteins_mapped_to_exactly_one_unique_ID = [[],[]]
 unique_hitpredict_to_flybase_hash = {}
 
@@ -289,11 +301,11 @@ for key in hitpredict_to_flybase_hash:
       counter_0 += 1
    elif (len(list(set(hitpredict_to_flybase_hash[key]))) == 1):
       counter_1 += 1
-      if (key in hitpredict_proteins_having_no_intersection_in_their_corresponding_map_in_flybase):
-         of_proteins_having_only_one_corresponding_flybase_ID += 1
-      unique_hitpredict_to_flybase_hash[key] = hitpredict_to_flybase_hash[key][0]
-      hitpredict_proteins_mapped_to_exactly_one_unique_ID[0].append(key)
-      hitpredict_proteins_mapped_to_exactly_one_unique_ID[1].append(hitpredict_to_flybase_hash[key][0])
+      if (key in hitpredict_proteins_having_no_intersection_in_their_corresponding_map_in_flybase or key in hitpredict_proteins_having_the_same_corresponding_map_in_flybase):
+         proteins_having_only_one_corresponding_flybase_ID += 1
+         unique_hitpredict_to_flybase_hash[key] = hitpredict_to_flybase_hash[key][0]
+         hitpredict_proteins_mapped_to_exactly_one_unique_ID[0].append(key)
+         hitpredict_proteins_mapped_to_exactly_one_unique_ID[1].append(hitpredict_to_flybase_hash[key][0])
    elif (len(list(set(hitpredict_to_flybase_hash[key]))) > 1):
       counter_geq_2 += 1
       
@@ -304,8 +316,8 @@ _str = ('The statistics about how HitPredict proeins are mapped to FlyBase IDs: 
 print(_str)
 statistics_file.write(_str)
 
-_str = ('# of_proteins_having_only_one_corresponding_flybase_ID: '
-+ str(of_proteins_having_only_one_corresponding_flybase_ID) + '\n')
+_str = ('# proteins_having_only_one_corresponding_flybase_ID: '
++ str(proteins_having_only_one_corresponding_flybase_ID) + '\n')
 print(_str)
 statistics_file.write(_str)
 
@@ -315,16 +327,19 @@ statistics_file.write(_str)
 # ######################################################################################
 
 
-_counter = 0
+_counter = {}
 n = len(hitpredict_proteins_mapped_to_exactly_one_unique_ID[1])
+for i in range(0, n):
+   _counter[i] = 0
 for i in range(0, n):
    counter = 0
    for j in range(0, n):
-      if (i < j and hitpredict_proteins_mapped_to_exactly_one_unique_ID[1][i] == hitpredict_proteins_mapped_to_exactly_one_unique_ID[1][j]):
+      if (hitpredict_proteins_mapped_to_exactly_one_unique_ID[1][i] == hitpredict_proteins_mapped_to_exactly_one_unique_ID[1][j]):
          counter += 1
-   if (counter > 1):
-      _counter += 1
-print(_counter)
+   _counter[counter] += 1
+for i in range(0, n):
+   if (_counter[i] > 0):
+      print(_counter[i], ' proteins have   ', i-1, '   common correspnding FlyBase IDs, with other proteins')
 
 n = len(hitpredict_proteins_mapped_to_exactly_one_unique_ID[0])
 with open('Mapping.UniProt.ID.to.FlyBase.ID.txt', 'w') as _file:
