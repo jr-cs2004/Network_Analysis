@@ -54,7 +54,7 @@ DEG_OGEE_combined_data_file_name = 'DEG_OGEE_combined_data.txt'
 PPIs_without_repeats_file_name = root_folder_path + '/output/PPIs_without_repeats.txt'
 repeats_statistics_file_name = root_folder_path + '/output/repeats_statistics.txt'
 PPIs_without_repeats_intersected_with_UniProt_IDs_file_name = root_folder_path + '/output/PPIs_without_repeats_intersected_with_UniProt_IDs.txt'
-PPIs_without_repeats_not_in_UniProt_IDs_file_name = root_folder_path + '/output/PPIs_without_repeats_not_in_UniProt_IDs.txt'
+localDB_IDs_not_in_UniProt_IDs_file_name = root_folder_path + '/output/Protein_IDs_not_in_UniProt_IDs.txt'
 UniProt_ID_to_FlyBase_ID_file_name = root_folder_path + '/output/UniProt_ID_to_FlyBase_ID.txt'
 GGIs_file_name = root_folder_path + '/output/GGIs.txt'
 GGIs_Filtered_By_Essentiality_Information_file_name = root_folder_path + '/output/GGIs_Filtered_By_Essentiality_Information.txt'
@@ -178,7 +178,7 @@ for line in all_UniProt_IDs_File:
 
 # print(len(all_UniProt_IDs))
 print(len(list(set(all_UniProt_IDs))))
-PPIs_without_repeats_not_in_UniProt_IDs = []
+localDB_IDs_not_in_UniProt_IDs = []
 removing_indices = []
 node_counter = 0
 n = len(unique_proteins)
@@ -187,7 +187,7 @@ for x in unique_proteins:
       node_counter += 1
    else:
       print(x)
-      PPIs_without_repeats_not_in_UniProt_IDs.append(x)
+      localDB_IDs_not_in_UniProt_IDs.append(x)
 _str = ('# of protein IDs not included in UniProt database: ' + str(n - node_counter) + '\n')
 print(_str)
 print(node_counter)
@@ -216,11 +216,11 @@ with open(PPIs_without_repeats_intersected_with_UniProt_IDs_file_name, 'w') as _
    for i in range(0, n):
       _file.write(source_protein_IDs[i] + '\t' + target_protein_IDs[i] + '\n')
 
-PPIs_without_repeats_not_in_UniProt_IDs = list(set(PPIs_without_repeats_not_in_UniProt_IDs))
-n = len(PPIs_without_repeats_not_in_UniProt_IDs)
-with open(PPIs_without_repeats_not_in_UniProt_IDs_file_name, 'w') as _file:
+localDB_IDs_not_in_UniProt_IDs = list(set(localDB_IDs_not_in_UniProt_IDs))
+n = len(localDB_IDs_not_in_UniProt_IDs)
+with open(localDB_IDs_not_in_UniProt_IDs_file_name, 'w') as _file:
    for i in range(0, n):
-      _file.write(PPIs_without_repeats_not_in_UniProt_IDs[i] + '\n')
+      _file.write(localDB_IDs_not_in_UniProt_IDs[i] + '\n')
 
 # ######################################################################################
 # ######################################################################################
