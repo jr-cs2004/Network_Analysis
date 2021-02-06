@@ -1,0 +1,28 @@
+the interaction file was read:
+# of lines in the PPI files read for source interacting proteins: 71643
+# of lines in the PPI files read for target interacting proteins: 71643
+# of unique proteins in the source lines: 8956
+# of unique proteins in the target lines: 9859
+# of unique proteins: 12064
+
+removing replications and self_loops: 
+# of replications: 0
+# of self_loops: 714
+# of unique_proteins after removing replications and self_loops: 12046
+
+# of protein IDs not included in UniProt database: 9
+# of PPIs of which at least one of the corresponding protein IDs is not included in UniProt database: 74
+
+localDB IDs are mapped to FlyBase IDs:
+# of IDs returned by uniprot Mapper: from: 12009 to: 12009 ---- uniques --> from: 11882 to: 9987
+# of all_proteins_having_at_least_an_ID_in_FlyBase: 11882
+# of all_FlyBase_IDs_obtained_by_mapping_uniprot_to_FlyBase: 9987
+# of proteins_having_no_intersection_in_their_corresponding_map_in_FlyBase: 8333, and uniques: 8333
+# of proteins_having_intersection_in_their_corresponding_map_in_FlyBase: 5542, and uniques: 3549
+# of proteins_having_the_same_corresponding_map_in_FlyBase: 5542, and uniques: 3549
+
+The statistics about how proeins are mapped to FlyBase IDs: 
+# of proteins having no corresponding ID): 164
+# of proteins mapped to exactly one ID): 11855
+# of proteins having more than one corresponding ID): 27
+# proteins_having_only_one_corresponding_FlyBase_ID: 11855
