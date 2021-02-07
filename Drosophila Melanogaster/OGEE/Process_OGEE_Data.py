@@ -49,11 +49,17 @@ print('# of unique genes: ', len(list(set(genes))))
 n = len(genes)
 counter_redundant = 0
 removing_redundant_indices = []
+double_essential_gene_list = []
 for i in range(0, n):
+    flag = False
     for j in range(0, n):
         if (i < j and genes[i] == genes[j] and essentiality[i] == essentiality[j]):
             counter_redundant += 1
             removing_redundant_indices.append(j)
+            flag = True
+    if (flag):
+        removing_redundant_indices.append(i)
+        double_essential_gene_list.append(genes[i])
 print('# of genes with repeats where the same essentiality reported for both case: ', counter_redundant)
 
 
@@ -65,7 +71,7 @@ print('# of genes with repeats where the same essentiality reported for both cas
 
 for indx in sorted(removing_redundant_indices, reverse = True):  
     del genes[indx] 
-    del essentiality[indx] 
+    del essentiality[indx]  
 
 
 # ######################################################################################
@@ -92,6 +98,7 @@ for i in range(0, n):
         unknown_gene_list.append(genes[i])
 print('# of genes with repeats where different essentiality reported for each repeat: ', counter_conflict)
 
+
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
@@ -100,31 +107,18 @@ print('# of genes with repeats where different essentiality reported for each re
 
 for indx in sorted(removing_conflict_indices, reverse = True):  
     del genes[indx] 
-    del essentiality[indx] 
+    del essentiality[indx]
+
 
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
 
-# counting hom many essential and non-essentiel genes are existed in the data and writing
-# the processed data into a file.
+# adding unknown genes (genes with different results in the two experiments)
 
-processed_OGEE_File = open("OGEE_Genes_essentiality_info_(redundancies_and_conflicts_removed).txt", "w")
-n = len(genes)
-counter_essential = 0
-counter_non_essential = 0
-counter = 0
-for i in range(0, n):
-    processed_OGEE_File.write(genes[i] + '\t' + essentiality[i] + '\n')
-    if (essentiality[i] == 'E'):
-        counter_essential += 1
-    elif (essentiality[i] == 'NE'):
-        counter_non_essential += 1
-    else:
-        counter += 1
-print('# of essential genes: ', counter_essential)
-print('# of non-essential genes: ', counter_non_essential)
-print('# of non-determined: ', counter)
+for x in double_essential_gene_list:  
+    genes.append(x)
+    essentiality.append('EE')
 
 
 # ######################################################################################
@@ -136,7 +130,7 @@ print('# of non-determined: ', counter)
 for x in unknown_gene_list:  
     genes.append(x)
     essentiality.append('U')
-
+    
 
 # ######################################################################################
 # ######################################################################################
@@ -145,19 +139,28 @@ for x in unknown_gene_list:
 # counting hom many essential and non-essentiel genes are existed in the data and writing
 # the processed data into a file.
 
-processed_OGEE_File = open("OGEE_Genes_essentiality_info_(redundancies_removed).txt", "w")
+processed_OGEE_File = open("OGEE_redundants_as_EE_conflicts_as_U.txt", "w")
 n = len(genes)
 counter_essential = 0
 counter_non_essential = 0
-counter = 0
+counter_unknown = 0
+counter_double_essential = 0
 for i in range(0, n):
     processed_OGEE_File.write(genes[i] + '\t' + essentiality[i] + '\n')
     if (essentiality[i] == 'E'):
         counter_essential += 1
+    elif (essentiality[i] == 'EE'):
+        counter_double_essential += 1
     elif (essentiality[i] == 'NE'):
         counter_non_essential += 1
     else:
-        counter += 1
+        counter_unknown += 1
 print('# of essential genes: ', counter_essential)
+print('# of essential genes (redundants): ', counter_double_essential)
 print('# of non-essential genes: ', counter_non_essential)
-print('# of non-determined: ', counter)
+print('# of non-determined: ', counter_unknown)
+
+
+# ######################################################################################
+# ######################################################################################
+# ######################################################################################
