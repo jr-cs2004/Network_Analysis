@@ -50,6 +50,7 @@ n = len(genes)
 counter_redundant = 0
 removing_redundant_indices = []
 double_essential_gene_list = []
+double_NoN_essential_gene_list = []
 for i in range(0, n):
     flag = False
     for j in range(0, n):
@@ -59,7 +60,10 @@ for i in range(0, n):
             flag = True
     if (flag):
         removing_redundant_indices.append(i)
-        double_essential_gene_list.append(genes[i])
+        if (essentiality[i] == "E"):
+            double_essential_gene_list.append(genes[i])
+        if (essentiality[i] == "NE"):
+            double_NoN_essential_gene_list.append(genes[i])
 print('# of genes with repeats where the same essentiality reported for both case: ', counter_redundant)
 
 
@@ -114,18 +118,25 @@ for indx in sorted(removing_conflict_indices, reverse = True):
 # ######################################################################################
 # ######################################################################################
 
-# adding unknown genes (genes with different results in the two experiments)
+# adding redundant genes (genes with the same results in the two experiments)
+# if it is reported both times as "E", we add it by "EE" state
+# if it is reported both times as "NE", we add it by "NN" state
 
 for x in double_essential_gene_list:  
     genes.append(x)
     essentiality.append('EE')
 
+for x in double_NoN_essential_gene_list:  
+    genes.append(x)
+    essentiality.append('NN')
+
 
 # ######################################################################################
 # ######################################################################################
 # ######################################################################################
 
 # adding unknown genes (genes with different results in the two experiments)
+# we add these genes by "U" state
 
 for x in unknown_gene_list:  
     genes.append(x)
@@ -145,6 +156,7 @@ counter_essential = 0
 counter_non_essential = 0
 counter_unknown = 0
 counter_double_essential = 0
+counter_double_NoN_essential = 0
 for i in range(0, n):
     processed_OGEE_File.write(genes[i] + '\t' + essentiality[i] + '\n')
     if (essentiality[i] == 'E'):
@@ -153,11 +165,14 @@ for i in range(0, n):
         counter_double_essential += 1
     elif (essentiality[i] == 'NE'):
         counter_non_essential += 1
+    elif (essentiality[i] == 'NN'):
+        counter_double_NoN_essential += 1
     else:
         counter_unknown += 1
 print('# of essential genes: ', counter_essential)
 print('# of essential genes (redundants): ', counter_double_essential)
 print('# of non-essential genes: ', counter_non_essential)
+print('# of non-essential genes (redundants): ', counter_double_NoN_essential)
 print('# of non-determined: ', counter_unknown)
 
 
