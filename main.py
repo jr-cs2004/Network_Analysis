@@ -3,29 +3,29 @@ import matplotlib.pyplot as plt
 import operator
 # import collections
 
+### for saving a plot as figure
+import matplotlib as mpl
+mpl.use("pgf")
+plt.rcParams.update({
+    "text.usetex": True,     # use inline math for ticks
+    "pgf.rcfonts": False,    # don't setup fonts from rc parameters
+    "pgf.preamble": "\n".join([
+         "\\usepackage{units}",          # load additional packages
+         "\\usepackage{metalogo}",
+         "\\usepackage{unicode-math}"   # unicode math setup
+    ])
+})
 # ########################################################################
 # ########################################################################
 #      Functions   START
 # ########################################################################
 # ########################################################################
 
-# def get_degree_frequencies(degree_sequence):
-#   print(len(degree_sequence))
-#   degree_freq = {}
-#   n = len(degree_sequence)
-#   for i in range(0, n):
-#     degree_freq[i] = 0
-  
-#   for d in degree_sequence:
-#     degree_freq[d[1]] += 1
-#   return degree_freq
-
-
 def get_LCC_size(G):
   LCC = sorted(nx.connected_components(G), key=len, reverse=True)[0]
   return len(LCC)
 
-def get_number_of_connected_component(G):
+def get_number_of_connected_components(G):
   return nx.number_connected_components(G)
 
 def get_pairwise_connectivity(G):
@@ -36,54 +36,76 @@ def get_pairwise_connectivity(G):
     pairwise_connectivity += n * (n - 1) / 2
   return pairwise_connectivity
 
-def doit(G, budget, func): 
+def get_centrality(G, centrality):
+  if (centrality == 'degree'):
+    return nx.degree_centrality(G)
+  if (centrality == 'betweenness'):
+    return nx.betweenness_centrality(G)
+  if (centrality == 'closeness'):
+    return nx.closeness_centrality(G)
+  if (centrality == 'eigenvector'):
+    return nx.eigenvector_centrality(G, max_iter=1000)
+
+def get_alalysis(G, budget, centrality): 
   temp_G = G.copy()
   i = 0
-  _list = []  
+  _list = {}
+  _list['largest_connected_component_size'] = []
+  _list['number_of_connected_components'] = []
+  _list['pairwise_connectivity'] = []
+  print(centrality, ': ', end=' ')
   while i <= (budget):
-    _list.append(func(temp_G))
-    eigenvector_centrality = nx.eigenvector_centrality(temp_G, max_iter=1000)
-    eigenvector_sequence = [(k, v) for k, v in eigenvector_centrality.items()] 
-    eigenvector_sequence = sorted(eigenvector_sequence, key=lambda item: item[1], reverse=True)
-    temp_G.remove_node(eigenvector_sequence[0][0])
+    _list['largest_connected_component_size'].append(get_LCC_size(temp_G))
+    _list['number_of_connected_components'].append(get_number_of_connected_components(temp_G))
+    _list['pairwise_connectivity'].append(get_pairwise_connectivity(temp_G))
+    centrality_dictionary = get_centrality(temp_G, centrality)
+    centrality_sequence = [(k, v) for k, v in centrality_dictionary.items()] 
+    centrality_sequence = sorted(centrality_sequence, key=lambda item: item[1], reverse=True)
+    temp_G.remove_node(centrality_sequence[0][0])
+    print("%.0f%%" % (i / budget * 100) , end='\r', flush=True)
     i = i + 1
-    # print("%.0f%%" % (i / budget * 100) , end='\r', flush=True)
   return _list
 
-def eigenvector_analysis(G, budget):
-  print('          1')
-  print(G.number_of_nodes())
-  print(G.number_of_edges())
-  LCC_Sizes = doit(G, budget, get_LCC_size)
-  print('          2')
-  print(G.number_of_nodes())
-  print(G.number_of_edges())
-  number_connected_components = doit(G, budget, get_number_of_connected_component)
-  print('          3')
-  print(G.number_of_nodes())
-  print(G.number_of_edges())
-  pairwise_connectivity = doit(G, budget, get_pairwise_connectivity)  
-  print('          4')
-  print(G.number_of_nodes())
-  print(G.number_of_edges())
-  return [LCC_Sizes, number_connected_components, pairwise_connectivity]
+def centrality_analysis(G, budget):
+  analysis = {}
+  centrality_list = ['degree'] # 'betweenness', 'eigenvector', 'closeness',
+  for centrality in centrality_list:
+    analysis[centrality] = get_alalysis(G, budget, centrality)
+  return analysis
 
-  # x_values = [*range(0, len(LCC_Sizes))]
-  # plt.plot(x_values, LCC_Sizes, label = "degree distribution")
-  # plt.xlabel('degree')
-  # # Set the y axis label of the current axis.
-  # plt.ylabel('frequecy')
-  # # Set a title of the current axes.
-  # plt.title('Two or more lines on same plot with suitable legends ')
-  # # show a legend on the plot
-  # plt.legend()
-  # # Display a figure.
-  # plt.show()
-  
+def _plot(result):
+  for item in result.items():
+    x_values = [*range(0, len(item[1]['largest_connected_component_size']))]
+    plt.plot(x_values, item[1]['largest_connected_component_size'], label = item[0])
+    plt.xlabel('number of removed nodes')
+    plt.ylabel('largest_connected_component_size')
+    plt.title('')
+    plt.legend()
+    plt.show()
+    plt.savefig("largest_connected_component_size.png")
+  plt.clf() 
+  for item in result.items():
+    x_values = [*range(0, len(item[1]['number_of_connected_components']))]
+    plt.plot(x_values, item[1]['number_of_connected_components'], label = item[0])
+    plt.xlabel('number of removed nodes')
+    plt.ylabel('number_of_connected_components')
+    plt.title('')
+    plt.legend()
+    plt.show()
+    plt.savefig("number_of_connected_components.png")
+  plt.clf() 
+  for item in result.items():
+    x_values = [*range(0, len(item[1]['pairwise_connectivity']))]
+    plt.plot(x_values, item[1]['pairwise_connectivity'], label = item[0])
+    plt.xlabel('number of removed nodes')
+    plt.ylabel('pairwise_connectivity')
+    plt.title('')
+    plt.legend()
+    plt.show()
+    plt.savefig("pairwise_connectivity.png")
+    
 
-
-
-
+ 
 # ########################################################################
 # ########################################################################
 #      Functions   END
@@ -91,101 +113,13 @@ def eigenvector_analysis(G, budget):
 # ########################################################################
 
 # file_name = ".\\Drosophila Melanogaster\\DroID\\DroID.GGIs.txt"
-# file_name = "test.txt"
-# G = nx.read_edgelist(file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
-# G.degree()  ----  List of nodes and their degrees
-
-G = nx.Graph()
-G.add_node('1')
-G.add_node('2')
-G.add_node('3')
-G.add_node('4')
-G.add_node('5')
-G.add_node('6')
-G.add_node('7')
-G.add_node('8')
-G.add_node('9')
-G.add_node('10')
-G.add_node('11')
-G.add_node('12')
-G.add_node('13')
-G.add_node('14')
-G.add_node('15')
-
-G.add_edge('1', '2')
-G.add_edge('1', '3')
-G.add_edge('1', '4')
-G.add_edge('1', '5')
-G.add_edge('1', '6')
-
-G.add_edge('7', '8')
-G.add_edge('7', '9')
-G.add_edge('7', '10')
-G.add_edge('7', '11')
-
-G.add_edge('12', '13')
-G.add_edge('12', '14')
-G.add_edge('12', '15')
-
-
+file_name = "test.txt"
+G = nx.read_edgelist(file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
 print(G.number_of_nodes())
 print(G.number_of_edges())
-
-_list = eigenvector_analysis(G, 5)
-print(_list)
-exit()
-
-
-# ########################################################################
-# ########################################################################
-#### Degree distribution plot
-
-# degree_freq = nx.degree_histogram(G)
-# degree_freq = degree_freq[1:]
-# x_values = [*range(1, len(degree_freq) + 1)]
-
-# print(len(degree_freq), len(x_values))
-
-# plt.plot(x_values, degree_freq, label = "degree distribution")
-# plt.xlabel('degree')
-# # Set the y axis label of the current axis.
-# plt.ylabel('frequecy')
-# # Set a title of the current axes.
-# plt.title('Two or more lines on same plot with suitable legends ')
-# # show a legend on the plot
-# plt.legend()
-# # Display a figure.
-# plt.show()
-
-
-
-#sort nodes based on their degrees and removed the top one
-i = 0
-
-LCC_Sizes = []
-LCC = sorted(nx.connected_components(G), key=len, reverse=True)[0]
-LCC_Sizes.append(len(LCC))
-
-while i < (G.number_of_nodes() / 10):
-  degree_sequence = sorted(G.degree, key=lambda x: x[1], reverse=True)
-  LCC = sorted(nx.connected_components(G), key=len, reverse=True)[0]
-  LCC_Sizes.append(len(LCC))
-  G.remove_node(degree_sequence[0][0])
-  i = i + 1
-print (G.number_of_nodes())
-
-x_values = [*range(0, len(LCC_Sizes))]
-plt.plot(x_values, LCC_Sizes, label = "degree distribution")
-plt.xlabel('degree')
-# Set the y axis label of the current axis.
-plt.ylabel('frequecy')
-# Set a title of the current axes.
-plt.title('Two or more lines on same plot with suitable legends ')
-# show a legend on the plot
-plt.legend()
-# Display a figure.
-plt.show()
-
+_result = centrality_analysis(G, 25)
+print(_result)
+_plot(_result)
 
 # ########################################################################
 # ########################################################################
@@ -193,6 +127,8 @@ plt.show()
 # ########################################################################
 # ########################################################################
 
+# ########################################################################
+# ########################################################################
 ######## draw graph in inset
 # plt.title("Degree rank plot")
 # plt.ylabel("degree")
@@ -204,6 +140,82 @@ plt.show()
 # nx.draw_networkx_nodes(G, pos, node_size=20)
 # nx.draw_networkx_edges(G, pos, alpha=0.4)
 # plt.show()
+
+
+# ########################################################################
+# ########################################################################
+#### Simple Graph
+# G = nx.Graph()
+# G.add_node('1')
+# G.add_node('2')
+# G.add_node('3')
+# G.add_node('4')
+# G.add_node('5')
+# G.add_node('6')
+# G.add_node('7')
+# G.add_node('8')
+# G.add_node('9')
+# G.add_node('10')
+# G.add_node('11')
+# G.add_node('12')
+# G.add_node('13')
+# G.add_node('14')
+# G.add_node('15')
+
+# G.add_edge('1', '2')
+# G.add_edge('1', '3')
+# G.add_edge('1', '4')
+# G.add_edge('1', '5')
+# G.add_edge('1', '6')
+
+# G.add_edge('7', '8')
+# G.add_edge('7', '9')
+# G.add_edge('7', '10')
+# G.add_edge('7', '11')
+
+# G.add_edge('12', '13')
+# G.add_edge('12', '14')
+# G.add_edge('12', '15')
+
+
+# ########################################################################
+# ########################################################################
+#### Degree distribution plot
+
+# degree_freq = nx.degree_histogram(G)
+# degree_freq = degree_freq[1:]
+# x_values = [*range(1, len(degree_freq) + 1)]
+# print(len(degree_freq), len(x_values))
+# plt.plot(x_values, degree_freq, label = "degree distribution")
+# plt.xlabel('degree')
+# plt.ylabel('frequecy')
+# plt.title('Two or more lines on same plot with suitable legends ')
+# plt.legend()
+# plt.show()
+
+# ########################################################################
+# ########################################################################
+####  plot result - multiple subfigure
+# def _plot(result):
+#   fig = plt.figure()
+#   axs = [plt.subplot2grid((2, 4), (0, 0), colspan=2), plt.subplot2grid((2, 4), (0, 2), colspan=2), plt.subplot2grid((2, 4), (1, 1), colspan=2)]
+#   for item in result.items():
+#     x_values = [*range(0, len(item[1]['largest_connected_component_size']))]
+
+#     axs[0].plot(x_values, item[1]['largest_connected_component_size'], label = item[0])
+#     axs[1].plot(x_values, item[1]['number_of_connected_components'], label = item[0])
+#     axs[2].plot(x_values, item[1]['pairwise_connectivity'], label = item[0])
+
+#   plt.xlabel('test')
+#   axs[0].set_ylabel('largest_connected_component_size')
+#   axs[1].set_ylabel('number_of_connected_components')
+#   axs[2].set_ylabel('pairwise_connectivity')
+#   plt.title('')
+#   plt.legend()
+#   plt.tight_layout(0.5)
+#   plt.show()
+#   plt.savefig("pgf_preamble.png")
+
 
 # ########################################################################
 # ########################################################################
