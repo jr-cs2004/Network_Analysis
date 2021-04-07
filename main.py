@@ -44,7 +44,7 @@ def get_centrality(G, centrality):
   if (centrality == 'closeness'):
     return nx.closeness_centrality(G)
   if (centrality == 'eigenvector'):
-    return nx.eigenvector_centrality(G, max_iter=1000)
+    return nx.eigenvector_centrality(G, max_iter=2000)
 
 def get_alalysis(G, budget, centrality): 
   temp_G = G.copy()
@@ -53,22 +53,33 @@ def get_alalysis(G, budget, centrality):
   _list['largest_connected_component_size'] = []
   _list['number_of_connected_components'] = []
   _list['pairwise_connectivity'] = []
+  _removing_nodes = []
   print(centrality, ': ', end=' ')
-  while i <= (budget):
+  while i < (budget):
     _list['largest_connected_component_size'].append(get_LCC_size(temp_G))
     _list['number_of_connected_components'].append(get_number_of_connected_components(temp_G))
     _list['pairwise_connectivity'].append(get_pairwise_connectivity(temp_G))
     centrality_dictionary = get_centrality(temp_G, centrality)
     centrality_sequence = [(k, v) for k, v in centrality_dictionary.items()] 
-    centrality_sequence = sorted(centrality_sequence, key=lambda item: item[1], reverse=True)
+    centrality_sequence = sorted(centrality_sequence, key=lambda item: item[1], reverse=True)    
+    _removing_nodes.append(centrality_sequence[0][0])
     temp_G.remove_node(centrality_sequence[0][0])
-    print("%.0f%%" % (i / budget * 100) , end='\r', flush=True)
+    print("%.0f%%" % (i / budget * 100) , end='\r')
     i = i + 1
+
+  i = 0
+  removing_nodes_file = open('removed_nodes_based_on_' + centrality + '.Centrality_budget.' + str(budget) + '.txt', 'w')
+  removing_nodes_file.write('nodes\tlargest_connected_component_size\tnumber_of_connected_components\tpairwise_connectivity\n')
+  for i in range(0, budget):
+    removing_nodes_file.write(_removing_nodes[i] + '\t' + 
+                              str(_list['largest_connected_component_size'][i]) + '\t' +
+                              str( _list['number_of_connected_components'][i]) + '\t' + 
+                              str(_list['pairwise_connectivity'][i]) + '\n')
   return _list
 
 def centrality_analysis(G, budget):
   analysis = {}
-  centrality_list = ['degree'] # 'betweenness', 'eigenvector', 'closeness',
+  centrality_list = ['degree', 'closeness', 'eigenvector'] # 'betweenness'
   for centrality in centrality_list:
     analysis[centrality] = get_alalysis(G, budget, centrality)
   return analysis
@@ -78,30 +89,30 @@ def _plot(result):
     x_values = [*range(0, len(item[1]['largest_connected_component_size']))]
     plt.plot(x_values, item[1]['largest_connected_component_size'], label = item[0])
     plt.xlabel('number of removed nodes')
-    plt.ylabel('largest_connected_component_size')
+    plt.ylabel('largest connected component size')
     plt.title('')
     plt.legend()
-    plt.show()
+    # plt.show()
     plt.savefig("largest_connected_component_size.png")
   plt.clf() 
   for item in result.items():
     x_values = [*range(0, len(item[1]['number_of_connected_components']))]
     plt.plot(x_values, item[1]['number_of_connected_components'], label = item[0])
     plt.xlabel('number of removed nodes')
-    plt.ylabel('number_of_connected_components')
+    plt.ylabel('number of connected components')
     plt.title('')
     plt.legend()
-    plt.show()
+    # plt.show()
     plt.savefig("number_of_connected_components.png")
   plt.clf() 
   for item in result.items():
     x_values = [*range(0, len(item[1]['pairwise_connectivity']))]
     plt.plot(x_values, item[1]['pairwise_connectivity'], label = item[0])
     plt.xlabel('number of removed nodes')
-    plt.ylabel('pairwise_connectivity')
+    plt.ylabel('pairwise connectivity')
     plt.title('')
     plt.legend()
-    plt.show()
+    # plt.show()
     plt.savefig("pairwise_connectivity.png")
     
 
@@ -112,12 +123,12 @@ def _plot(result):
 # ########################################################################
 # ########################################################################
 
-# file_name = ".\\Drosophila Melanogaster\\DroID\\DroID.GGIs.txt"
-file_name = "test.txt"
+file_name = ".\\Escherichia coli\\STRING\\output\\original_PPIs_threshold_900_redundancies_N_self_loops_removed.txt"
+# file_name = "test.txt"
 G = nx.read_edgelist(file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
 print(G.number_of_nodes())
 print(G.number_of_edges())
-_result = centrality_analysis(G, 25)
+_result = centrality_analysis(G, 400)
 print(_result)
 _plot(_result)
 

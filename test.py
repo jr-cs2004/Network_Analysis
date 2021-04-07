@@ -57,6 +57,7 @@ for line in ogee_File:
     ogee_genes.append([line.split('\t')[3], line.split('\t')[4]])
     _counter += 1
 print('ogee: ', _counter)
+
 essential_counter = 0
 non_essential_counter = 0
 conditionally_essential_counter = 0

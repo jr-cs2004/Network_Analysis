@@ -104,7 +104,7 @@ GGIs_Filtered_By_Essentiality_Information_file_name = root_folder_path + '/outpu
 # ######################################################################################
 
 
-deg_File = open("DEG/E.Coli.MG1655.I.Essential.Genes.txt", "r", encoding='utf8')
+deg_File = open("DEG/S.Cerevisiae.Essential.Genes.txt", "r", encoding='utf8')
 _counter = 0
 deg_genes = []
 for line in deg_File:
@@ -119,7 +119,7 @@ print('# of unique genes reported by deg: ', len(list(set(deg_genes))))
 # ######################################################################################
 
 
-ogee_File = open("OGEE/report_1.txt", "r")
+ogee_File = open("OGEE/Saccharomyces cerevisiae W303_genes.txt", "r")
 _counter = 0
 ogee_genes = []
 ogee_essential_genes = []
@@ -222,7 +222,7 @@ statistics_file.write(_str)
 # ######################################################################################
 
 
-for i in range(700, 750, 100):
+for i in range(600, 1000, 100):
     _file = open(root_folder_path + '/output/original_PPIs_threshold_' + str(i) + '.txt', 'w')
     _source_protein_IDs = []
     _target_protein_IDs = []
