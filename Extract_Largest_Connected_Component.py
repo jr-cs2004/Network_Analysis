@@ -2,7 +2,8 @@ import networkx as nx
 
 N = 700
 
-original_PPIs_file_name = ".\\Escherichia coli\\STRING\\output\\original_PPIs_threshold_" + str(N) + "_redundancies_N_self_loops_removed.txt"
+# original_PPIs_file_name = ".\\Escherichia coli\\DIP\\output\\original_PPIs_threshold_" + str(N) + "_redundancies_N_self_loops_removed.txt"
+original_PPIs_file_name = ".\\Drosophila Melanogaster\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed.txt"
 G = nx.read_edgelist(original_PPIs_file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
 
 print('number_of_nodes: ', G.number_of_nodes())
@@ -27,7 +28,8 @@ _str = ('the interaction file was read:' + '\n'
 + '# of unique proteins: ' + str(len(list(set(source_protein_IDs + target_protein_IDs)))) + '\n\n')
 print(_str)
 
-original_PPIs_file = open('.\\Escherichia coli\\STRING\\output\\original_PPIs_threshold_' + str(N) + '_redundancies_N_self_loops_removed_N_Connected.txt', "w")
+# original_PPIs_file = open('.\\Escherichia coli\\STRING\\output\\original_PPIs_threshold_' + str(N) + '_redundancies_N_self_loops_removed_N_Connected.txt', "w")
+original_PPIs_file = open('.\\Drosophila Melanogaster\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt', "w")
 i = 0
 n = len(source_protein_IDs)
 counter = 0
@@ -38,7 +40,8 @@ for i in range(0, n):
 
 print(counter)
         
-original_PPIs_file_name = ".\\Escherichia coli\\STRING\\output\\original_PPIs_threshold_" + str(N) + "_redundancies_N_self_loops_removed_N_Connected.txt"
+# original_PPIs_file_name = ".\\Escherichia coli\\STRING\\output\\original_PPIs_threshold_" + str(N) + "_redundancies_N_self_loops_removed_N_Connected.txt"
+original_PPIs_file_name = ".\\Drosophila Melanogaster\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
 
 original_PPIs_file = open(original_PPIs_file_name, "r")
 

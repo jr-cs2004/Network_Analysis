@@ -44,7 +44,7 @@ def get_centrality(G, centrality):
   if (centrality == 'closeness'):
     return nx.closeness_centrality(G)
   if (centrality == 'eigenvector'):
-    return nx.eigenvector_centrality(G, max_iter=2000)
+    return nx.eigenvector_centrality(G, max_iter=5000)
 
 def get_alalysis(G, budget, centrality): 
   temp_G = G.copy()
@@ -54,7 +54,7 @@ def get_alalysis(G, budget, centrality):
   _list['number_of_connected_components'] = []
   _list['pairwise_connectivity'] = []
   _removing_nodes = []
-  print(centrality, ': ', end=' ')
+  print(centrality, ': ')
   while i < (budget):
     _list['largest_connected_component_size'].append(get_LCC_size(temp_G))
     _list['number_of_connected_components'].append(get_number_of_connected_components(temp_G))
@@ -75,11 +75,12 @@ def get_alalysis(G, budget, centrality):
                               str(_list['largest_connected_component_size'][i]) + '\t' +
                               str( _list['number_of_connected_components'][i]) + '\t' + 
                               str(_list['pairwise_connectivity'][i]) + '\n')
+  removing_nodes_file.close()
   return _list
 
 def centrality_analysis(G, budget):
   analysis = {}
-  centrality_list = ['degree', 'closeness', 'eigenvector'] # 'betweenness'
+  centrality_list = ['degree', 'betweenness', 'closeness', 'eigenvector'] # 
   for centrality in centrality_list:
     analysis[centrality] = get_alalysis(G, budget, centrality)
   return analysis
@@ -123,12 +124,12 @@ def _plot(result):
 # ########################################################################
 # ########################################################################
 
-file_name = ".\\Escherichia coli\\STRING\\output\\original_PPIs_threshold_900_redundancies_N_self_loops_removed.txt"
+file_name = ".\\Saccharomyces cerevisiae\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
 # file_name = "test.txt"
 G = nx.read_edgelist(file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
 print(G.number_of_nodes())
 print(G.number_of_edges())
-_result = centrality_analysis(G, 400)
+_result = centrality_analysis(G, 1200)
 print(_result)
 _plot(_result)
 
