@@ -1,8 +1,8 @@
 import networkx as nx
 
 def get_essential_proteins_info():
-    Essentiality_File = open("E:\\Javad Rezaei\\Second Paper\\Network_Analysis\\Escherichia coli\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
-    # Essentiality_File = open("E:\\Javad Rezaei\\Second Paper\\Network_Analysis\\Saccharomyces cerevisiae\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
+    Essentiality_File = open(".\\Escherichia coli\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
+    # Essentiality_File = open(".\\Saccharomyces cerevisiae\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
     _IDs = []
     _Essentiality = []
     essential_IDs = []
@@ -21,7 +21,6 @@ def get_essential_proteins_info():
     print(len(_IDs))
     print(len(essential_IDs))
     print(len(unknown_essential_IDs))
-    print('###################')
     print('###################')
     return [_IDs, _Essentiality, essential_IDs, unknown_essential_IDs]
 
@@ -53,10 +52,14 @@ def centrality_analysis(G):
     return analysis
 
 def get_alalysis(G, centrality): 
-    print('############')
+    print('##################################')
+    print('##################################')
     print(centrality)
     centrality_based_nodes_file = open(".\\Escherichia coli\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality + "_centrality.budget_400.txt", "r") 
     # centrality_based_nodes_file = open(".\\Saccharomyces cerevisiae\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality + "_centrality.budget_950.txt", "r") 
+    
+    centrality_dictionary = get_centrality(G, centrality)
+
     centrality_based_nodes = []
     centrality_based_nodes_centrality = {}
     _index = 0
@@ -66,8 +69,7 @@ def get_alalysis(G, centrality):
             centrality_based_nodes_centrality[line.split('\t')[0]] = line.split('\t')[1]
         _index += 1
   
-    centrality_dictionary = get_centrality(G, centrality)
-
+    
     essential_proteins_info = get_essential_proteins_info() # [_IDs, _Essentiality, essential_IDs, unknown_essential_IDs]    
     proteins_ID = essential_proteins_info[0]
     proteins_Essentiality = essential_proteins_info[1]
@@ -75,8 +77,8 @@ def get_alalysis(G, centrality):
     unknown_essential_proteins_ID = essential_proteins_info[3]
 
     for i in range(50, 401, 50): # for i in range(50, 951, 50):
-        GA_critical_nodes_file = open("E:\\Javad Rezaei\\Second Paper\\Boost\\Boost\\E.coli\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
-        # GA_critical_nodes_file = open("E:\\Javad Rezaei\\Second Paper\\Boost\\Boost\\S.cerevisiae\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
+        GA_critical_nodes_file = open(".\\Escherichia coli\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
+        # GA_critical_nodes_file = open(".\\Escherichia coli\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
         critical_nodes = []
         _index = 0
         for line in GA_critical_nodes_file:
@@ -89,16 +91,37 @@ def get_alalysis(G, centrality):
         critical_nodes_N_essentials = [value for value in critical_nodes if value in essential_proteins_ID]
         critical_nodes_N_unknown_essentials = [value for value in critical_nodes if value in unknown_essential_proteins_ID]
 
-        centrality_based_nodes_N_essentials = [value for value in centrality_based_nodes if value in essential_proteins_ID]
-        centrality_based_nodes_N_unknown_essentials = [value for value in centrality_based_nodes if value in unknown_essential_proteins_ID]
+        centrality_based_nodes_N_essentials = [value for value in centrality_based_nodes[0:i+1] if value in essential_proteins_ID]
+        centrality_based_nodes_N_unknown_essentials = [value for value in centrality_based_nodes[0:i+1] if value in unknown_essential_proteins_ID]
         print('Number of nodes:\t', i)
         print('critical_nodes_N_essentials:\t', len(critical_nodes_N_essentials))
         print('critical_nodes_N_unknown_essentials:\t', len(critical_nodes_N_unknown_essentials))
         print('centrality_based_nodes_N_essentials:\t', len(centrality_based_nodes_N_essentials))
         print('centrality_based_nodes_N_unknown_essentials:\t', len(centrality_based_nodes_N_unknown_essentials))
         _lst = [value for value in centrality_based_nodes_N_essentials if value in critical_nodes_N_essentials]
-        print(len(_lst))
+        print(len(_lst), '\t', len(_lst) / len(critical_nodes_N_essentials) * 100, '%')
         print('\n\n')
+
+        output_file_name = ".\\Escherichia coli\\DIP\\output\\Boost\\Result\\intersection_statistics\\" + centrality + "\\budget_" + str(i) + ".txt"
+        output_file = open(output_file_name, 'w')
+        
+        output_file.write('critical_nodes_N_essentials:\t'+ str(len(critical_nodes_N_essentials)) + '\n')
+        output_file.write('critical_nodes_N_unknown_essentials:\t' + str(len(critical_nodes_N_unknown_essentials)) + '\n')
+        output_file.write('centrality_based_nodes_N_essentials:\t' + str(len(centrality_based_nodes_N_essentials)) + '\n')
+        output_file.write('centrality_based_nodes_N_unknown_essentials:\t' + str(len(centrality_based_nodes_N_unknown_essentials)) + '\n')
+        output_file.write('essential_nodes_intersection:\t' + str(len(_lst)) + '\t' + str(len(_lst) / len(critical_nodes_N_essentials) * 100) + '%\n')
+        output_file.write('\n##################\n\n')
+        output_file.write('Node\tCentrality\n')
+        output_file.write('critical_nodes\n')  
+        for node in critical_nodes_N_essentials:
+            output_file.write(node + '\t' + str(critical_node_centrality[node]) + '\n')
+        
+        output_file.write('\n##################\n\n')
+        output_file.write('centrality_based_nodes\n')        
+        for node in centrality_based_nodes_N_essentials:
+            output_file.write(node + '\t' + str(centrality_based_nodes_centrality[node]) + '\n')
+        output_file.close
+        
 
 
 file_name = ".\\Escherichia coli\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
