@@ -63,8 +63,8 @@ def get_alalysis(G, budget, centrality):
             print(_list['largest_connected_component_size'][i-1])
 
     i = 0
-    # removing_nodes_file = open('.\\Saccharomyces cerevisiae\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_' + centrality + '.Centrality_budget.' + str(budget) + '.txt', 'w')
-    removing_nodes_file = open('.\\Escherichia coli\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_' + centrality + '_centrality.budget_' + str(budget) + '.txt', 'w')
+    removing_nodes_file = open('.\\Saccharomyces cerevisiae\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_' + centrality + '_centrality.budget_' + str(budget) + '.txt', 'w')
+    # removing_nodes_file = open('.\\Escherichia coli\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_' + centrality + '_centrality.budget_' + str(budget) + '.txt', 'w')
     removing_nodes_file.write('nodes\tcentrality_value\tlargest_connected_component_size\tnumber_of_connected_components\tpairwise_connectivity\n')
     while i < (budget):
         removing_nodes_file.write(_removing_nodes[i] + '\t' + str(_removing_nodes_centrality[i]) + '\t' +
@@ -93,9 +93,9 @@ def centrality_analysis(G, budget):
 
 
 
-# original_PPIs_file_name = ".\\Saccharomyces cerevisiae\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
-original_PPIs_file_name = ".\\Escherichia coli\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
+original_PPIs_file_name = ".\\Saccharomyces cerevisiae\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
+# original_PPIs_file_name = ".\\Escherichia coli\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
 G = nx.read_edgelist(original_PPIs_file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
 print(G.number_of_nodes())
 print(G.number_of_edges())
-_result = centrality_analysis(G, 400)
+_result = centrality_analysis(G, 950)
