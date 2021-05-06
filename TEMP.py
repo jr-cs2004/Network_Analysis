@@ -1,8 +1,9 @@
 import networkx as nx
+import csv
 
 def get_essential_proteins_info():
-    # Essentiality_File = open(".\\Escherichia coli\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
-    Essentiality_File = open(".\\Saccharomyces cerevisiae\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
+    Essentiality_File = open(".\\Escherichia coli\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
+    # Essentiality_File = open(".\\Saccharomyces cerevisiae\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
     _IDs = []
     _Essentiality = []
     essential_IDs = []
@@ -25,18 +26,18 @@ def get_essential_proteins_info():
     return [_IDs, _Essentiality, essential_IDs, unknown_essential_IDs]
 
 def get_centrality(G, centrality):
-    if (centrality == 'degree'):
+    if (centrality == 'Degree'):
         return nx.degree_centrality(G)
-    if (centrality == 'betweenness'):
+    if (centrality == 'Betweenness'):
         return nx.betweenness_centrality(G)
-    if (centrality == 'closeness'):
+    if (centrality == 'Closeness'):
         return nx.closeness_centrality(G)
-    if (centrality == 'eigenvector'):
+    if (centrality == 'Eigenvector'):
         return nx.eigenvector_centrality(G, max_iter=5000)
 
 def get_critical_node_centrality(G, critical_nodes, centrality, centrality_dictionary): 
     critical_node_centrality = {}
-    if (centrality != 'degree'):
+    if (centrality != 'Degree'):
         for node in critical_nodes:        
             critical_node_centrality[node] = centrality_dictionary[node]
     else:
@@ -44,9 +45,9 @@ def get_critical_node_centrality(G, critical_nodes, centrality, centrality_dicti
             critical_node_centrality[node] = G.degree[node]
     return critical_node_centrality
 
-def centrality_analysis(G):
+def centrality_criticality_analysis(G):
     analysis = {}
-    centrality_list = ['degree', 'betweenness', 'closeness', 'eigenvector'] # 
+    centrality_list = ['Degree', 'Betweenness', 'Closeness', 'Eigenvector'] # 
     for centrality in centrality_list:
         analysis[centrality] = get_alalysis(G, centrality)
     return analysis
@@ -55,8 +56,8 @@ def get_alalysis(G, centrality):
     print('##################################')
     print('##################################')
     print(centrality)
-    # centrality_based_nodes_file = open(".\\Escherichia coli\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality + "_centrality.budget_400.txt", "r") 
-    centrality_based_nodes_file = open(".\\Saccharomyces cerevisiae\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality + "_centrality.budget_950.txt", "r") 
+    centrality_based_nodes_file = open(".\\Escherichia coli\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality + "_centrality.budget_400.txt", "r") 
+    # centrality_based_nodes_file = open(".\\Saccharomyces cerevisiae\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality + "_centrality.budget_950.txt", "r") 
     
     centrality_dictionary = get_centrality(G, centrality)
 
@@ -76,9 +77,9 @@ def get_alalysis(G, centrality):
     essential_proteins_ID = essential_proteins_info[2]
     unknown_essential_proteins_ID = essential_proteins_info[3]
 
-    for i in range(50, 301, 50): # for i in range(50, 951, 50):
-        # GA_critical_nodes_file = open(".\\Escherichia coli\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
-        GA_critical_nodes_file = open(".\\Saccharomyces cerevisiae\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
+    for i in range(50, 401, 50): # for i in range(50, 951, 50):
+        GA_critical_nodes_file = open(".\\Escherichia coli\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
+        # GA_critical_nodes_file = open(".\\Saccharomyces cerevisiae\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
         critical_nodes = []
         _index = 0
         for line in GA_critical_nodes_file:
@@ -102,10 +103,15 @@ def get_alalysis(G, centrality):
         print(len(_lst), '\t', len(_lst) / len(critical_nodes_N_essentials) * 100, '%')
         print('\n\n')
 
-        # output_file_name = ".\\Escherichia coli\\DIP\\output\\Boost\\Result\\intersection_statistics\\" + centrality + "\\budget_" + str(i) + ".txt"
-        output_file_name = ".\\Saccharomyces cerevisiae\\DIP\\output\\Boost\\Result\\intersection_statistics\\" + centrality + "\\budget_" + str(i) + ".txt"
+        output_file_name = ".\\Escherichia coli\\DIP\\output\\Boost\\Result\\intersection_statistics\\" + centrality + "\\budget_" + str(i) + ".txt"
+        # output_file_name = ".\\Saccharomyces cerevisiae\\DIP\\output\\Boost\\Result\\intersection_statistics\\" + centrality + "\\budget_" + str(i) + ".txt"       
         output_file = open(output_file_name, 'w')
-        
+                
+        CSV_output_file_name = ".\\Escherichia coli\\DIP\\output\\Boost\\Result\\intersection_statistics\\" + centrality + "\\budget_" + str(i) + ".csv"
+        CSV_output_file = open(CSV_output_file_name, mode='w')
+        CSV_output_writer = csv.writer(CSV_output_file, delimiter = ',', quotechar = '"', quoting = csv.QUOTE_MINIMAL, lineterminator='\n')    
+        CSV_output_writer.writerow(['P', 'x'])    
+
         output_file.write('critical_nodes_N_essentials:\t'+ str(len(critical_nodes_N_essentials)) + '\n')
         output_file.write('critical_nodes_N_unknown_essentials:\t' + str(len(critical_nodes_N_unknown_essentials)) + '\n')
         output_file.write('centrality_based_nodes_N_essentials:\t' + str(len(centrality_based_nodes_N_essentials)) + '\n')
@@ -116,16 +122,18 @@ def get_alalysis(G, centrality):
         output_file.write('critical_nodes\n')  
         for node in critical_nodes_N_essentials:
             output_file.write(node + '\t' + str(critical_node_centrality[node]) + '\n')
+            CSV_output_writer.writerow(['Genetic_Algorithm', str(critical_node_centrality[node])])
         
         output_file.write('\n##################\n\n')
         output_file.write('centrality_based_nodes\n')        
         for node in centrality_based_nodes_N_essentials:
             output_file.write(node + '\t' + str(centrality_based_nodes_centrality[node]) + '\n')
+            CSV_output_writer.writerow([centrality + '_Centrality', str(centrality_based_nodes_centrality[node])])
         output_file.close
         
 
 
-# file_name = ".\\Escherichia coli\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
-file_name = ".\\Saccharomyces cerevisiae\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
+file_name = ".\\Escherichia coli\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
+# file_name = ".\\Saccharomyces cerevisiae\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
 G = nx.read_edgelist(file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
-centrality_analysis(G)
+centrality_criticality_analysis(G)
