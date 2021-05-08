@@ -77,7 +77,7 @@ def get_alalysis(G, centrality):
     essential_proteins_ID = essential_proteins_info[2]
     unknown_essential_proteins_ID = essential_proteins_info[3]
 
-    for i in range(50, 601, 50): # for i in range(50, 951, 50):
+    for i in range(50, 51, 50): # for i in range(50, 951, 50):
         # GA_critical_nodes_file = open(".\\Escherichia coli\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
         GA_critical_nodes_file = open(".\\Saccharomyces cerevisiae\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
         critical_nodes = []
