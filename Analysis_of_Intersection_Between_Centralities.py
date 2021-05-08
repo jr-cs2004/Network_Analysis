@@ -24,6 +24,26 @@ def get_essential_proteins_info():
     print('###################')
     return [_IDs, _Essentiality, essential_IDs, unknown_essential_IDs]
 
+def get_centrality(G, centrality):
+    if (centrality == 'Degree'):
+        return nx.degree_centrality(G)
+    if (centrality == 'Betweenness'):
+        return nx.betweenness_centrality(G)
+    if (centrality == 'Closeness'):
+        return nx.closeness_centrality(G)
+    if (centrality == 'Eigenvector'):
+        return nx.eigenvector_centrality(G, max_iter=5000)
+
+def get_critical_node_centrality(G, critical_nodes, centrality, centrality_dictionary): 
+    critical_node_centrality = {}
+    if (centrality != 'Degree'):
+        for node in critical_nodes:        
+            critical_node_centrality[node] = centrality_dictionary[node]
+    else:
+        for node in critical_nodes:        
+            critical_node_centrality[node] = G.degree[node]
+    return critical_node_centrality
+
 def centrality_analysis():
     analysis = {}
     centrality_list = ['degree', 'betweenness', 'closeness', 'eigenvector'] #
@@ -46,22 +66,22 @@ def get_alalysis(centrality_1, centrality_2):
     # centrality_based_nodes_file = open(".\\Saccharomyces cerevisiae\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality + "_centrality.budget_950.txt", "r") 
     
 
-    centrality_based_nodes_1 = []
-    centrality_based_nodes_centrality_1 = {}
+    centrality_1_based_nodes = []
+    centrality_1_based_nodes_centrality = {}
     _index = 0
     for line in centrality_based_nodes_file_1:
         if (_index >= 1): # for the header
-            centrality_based_nodes_1.append(line.split('\t')[0])
-            centrality_based_nodes_centrality_1[line.split('\t')[0]] = line.split('\t')[1]
+            centrality_1_based_nodes.append(line.split('\t')[0])
+            centrality_1_based_nodes_centrality[line.split('\t')[0]] = line.split('\t')[1]
         _index += 1
   
-    centrality_based_nodes_2 = []
-    centrality_based_nodes_centrality_2 = {}
+    centrality_2_based_nodes = []
+    centrality_2_based_nodes_centrality = {}
     _index = 0
     for line in centrality_based_nodes_file_2:
         if (_index >= 1): # for the header
-            centrality_based_nodes_2.append(line.split('\t')[0])
-            centrality_based_nodes_centrality_2[line.split('\t')[0]] = line.split('\t')[1]
+            centrality_2_based_nodes.append(line.split('\t')[0])
+            centrality_2_based_nodes_centrality[line.split('\t')[0]] = line.split('\t')[1]
         _index += 1
 
     essential_proteins_info = get_essential_proteins_info() # [_IDs, _Essentiality, essential_IDs, unknown_essential_IDs]    
@@ -69,6 +89,9 @@ def get_alalysis(centrality_1, centrality_2):
     proteins_Essentiality = essential_proteins_info[1]
     essential_proteins_ID = essential_proteins_info[2]
     unknown_essential_proteins_ID = essential_proteins_info[3]
+
+    centrality_1_dictionary = get_centrality(G, centrality_1) 
+    centrality_2_dictionary = get_centrality(G, centrality_2) 
 
     for i in range(50, 401, 50): # for i in range(50, 951, 50):
         GA_critical_nodes_file = open(".\\Escherichia coli\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt", "r") 
@@ -78,11 +101,13 @@ def get_alalysis(centrality_1, centrality_2):
         for line in GA_critical_nodes_file:
             if (_index >= 2): # for the header
                 critical_nodes.append(line.split()[1])
-            _index += 1        
+            _index += 1
 
-        critical_nodes_N_centrality_1 = [value for value in critical_nodes if value in centrality_based_nodes_1[0:i]]
-        critical_nodes_N_centrality_2 = [value for value in critical_nodes if value in centrality_based_nodes_2[0:i]]
-        centrality_1_N_centrality_2 = [value for value in centrality_based_nodes_2[0:i] if value in centrality_based_nodes_1[0:i]]
+        critical_nodes_N_essentials = [value for value in critical_nodes if value in essential_proteins_ID]
+        
+        critical_nodes_N_centrality_1 = [value for value in critical_nodes if value in centrality_1_based_nodes[0:i]]
+        critical_nodes_N_centrality_2 = [value for value in critical_nodes if value in centrality_2_based_nodes[0:i]]
+        centrality_1_N_centrality_2 = [value for value in centrality_2_based_nodes[0:i] if value in centrality_1_based_nodes[0:i]]
 
         critical_nodes_N_centrality_1_N_Essential = [value for value in critical_nodes_N_centrality_1 if value in essential_proteins_ID]
         critical_nodes_N_centrality_2_N_Essential = [value for value in critical_nodes_N_centrality_2 if value in essential_proteins_ID]
