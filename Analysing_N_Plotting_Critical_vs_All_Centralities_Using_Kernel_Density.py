@@ -1,10 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
-import statsmodels.api as sm
-import pylab
- 
-_lambda = 0.6
+from sklearn.neighbors import KernelDensity
+
 def get_essential_proteins_info(species):
     Essentiality_File = open(".\\" + species + "\\DIP\\output\\DIP_IDs_N_Essentiality.txt", "r") 
     _IDs = []
@@ -54,7 +52,7 @@ all_proteins_centrality = np.array(all_proteins_centrality)
 
 density = gaussian_kde(all_proteins_centrality)
 x_vals = np.linspace(0, max(all_proteins_centrality), 200) # Specifying the limits of our all_proteins_centrality
-density.covariance_factor = lambda : _lambda #Smoothing parameter
+density.covariance_factor = lambda : .5 #Smoothing parameter
  
 density._compute_covariance()
 plt.plot(x_vals,density(x_vals))
@@ -74,7 +72,7 @@ all_essential_proteins_centrality = np.array(all_essential_proteins_centrality)
 
 density = gaussian_kde(all_essential_proteins_centrality)
 x_vals = np.linspace(0, max(all_essential_proteins_centrality), 200) # Specifying the limits of our all_essential_proteins_centrality
-density.covariance_factor = lambda : _lambda #Smoothing parameter
+density.covariance_factor = lambda : .5 #Smoothing parameter
  
 density._compute_covariance()
 plt.plot(x_vals,density(x_vals))
@@ -84,17 +82,17 @@ plt.xlabel(centrality)
 plt.ylabel('Frequency')
 plt.show()
 
-# data = [all_proteins_centrality, all_essential_proteins_centrality]
-# fig = plt.figure(figsize =(10, 7))
+data = [all_proteins_centrality, all_essential_proteins_centrality]
+fig = plt.figure(figsize =(10, 7))
   
-# # Creating axes instance
-# ax = fig.add_axes([0, 0, 1, 1])
+# Creating axes instance
+ax = fig.add_axes([0, 0, 1, 1])
   
-# # Creating plot
-# bp = ax.boxplot(data)
+# Creating plot
+bp = ax.boxplot(data)
   
-# # show plot
-# plt.show()
+# show plot
+plt.show()
 
 
 
@@ -133,7 +131,7 @@ for centrality in centrality_list:
 
 
 for centrality in centrality_list:
-    for i in range(650, 651, 50):
+    for i in range(50, 200, 50):
         file_name = ".\\" + species + "\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt"
         with open (file_name, 'r') as critical_nodes_file:
             critical_nodes = []
@@ -151,90 +149,30 @@ for centrality in centrality_list:
 
 
         critical_nodes_centrality = np.array(critical_nodes_centrality)
-
+        
+        x_vals = np.linspace(0, centralities_maximum_value[centrality], 200) # Specifying the limits of our critical_nodes_centrality
+        density =  KernelDensity(kernel='gaussian').fit(critical_nodes_centrality.reshape(-1,1))
+        e = density.score_samples(x_vals.reshape(-1,1))
+        plt.plot(x_vals, e, label = "Genetic_Algorithm")
         for ___centrality in centrality_list:
-            top_centrality_based_nodes_centralities_1 = []
+            top_centrality_based_nodes_centralities = []
 
             top_centrality_based_nodes = all_top_centrality_based_nodes[___centrality][0:i]
             top_centrality_based_nodes = [value for value in top_centrality_based_nodes if value in essential_IDs]
             print(___centrality + '_baed_nodes: ', len(top_centrality_based_nodes))
             for node in top_centrality_based_nodes:
-                top_centrality_based_nodes_centralities_1.append(all_proteins_centrality_dictionary[centrality][node])
-            top_centrality_based_nodes_centralities_1 = np.array(top_centrality_based_nodes_centralities_1)
-
+                top_centrality_based_nodes_centralities.append(all_proteins_centrality_dictionary[centrality][node])
+            top_centrality_based_nodes_centralities = np.array(top_centrality_based_nodes_centralities)
             
+            x_vals = np.linspace(0, centralities_maximum_value[centrality], 200) # Specifying the limits of our top_centrality_based_nodes_centralities
+            density =  KernelDensity(kernel='gaussian').fit(top_centrality_based_nodes_centralities.reshape(-1,1))
+            e = density.score_samples(x_vals.reshape(-1,1))
+            plt.plot(x_vals, e, label = ___centrality + "_Centrality")
 
-            
-
-            for ___centrality_2 in centrality_list:
-                top_centrality_based_nodes_centralities_2 = []
-                top_centrality_based_nodes = all_top_centrality_based_nodes[___centrality_2][0:i]
-                top_centrality_based_nodes = [value for value in top_centrality_based_nodes if value in essential_IDs]
-                print(___centrality_2 + '_baed_nodes: ', len(top_centrality_based_nodes))
-                for node in top_centrality_based_nodes:
-                    top_centrality_based_nodes_centralities_2.append(all_proteins_centrality_dictionary[centrality][node])
-                top_centrality_based_nodes_centralities_2 = np.array(top_centrality_based_nodes_centralities_2)
-                test1 = top_centrality_based_nodes_centralities_2
-                test2 = critical_nodes_centrality
-                test1.sort()
-                quantile_levels1 = np.arange(len(test1),dtype=float)/len(test1)
-
-                test2.sort()
-                quantile_levels2 = np.arange(len(test2),dtype=float)/len(test2)
-
-                #Use the smaller set of quantile levels to create the plot
-                quantile_levels = quantile_levels2
-
-                #We already have the set of quantiles for the smaller data set
-                quantiles2 = test2
-
-                #We find the set of quantiles for the larger data set using linear interpolation
-                quantiles1 = np.interp(quantile_levels,quantile_levels1,test1)
-
-                #Plot the quantiles to create the qq plot
-                pylab.plot(quantiles1,quantiles2, label = 'Critical vs ' + ___centrality_2)
-
-                #Add a reference line
-                maxval = max(test1[-1],test2[-1])
-                minval = min(test1[0],test2[0])
-                pylab.plot([minval,maxval],[minval,maxval],'k-')
-
-                if ___centrality_2 != ___centrality:
-                    test1 = top_centrality_based_nodes_centralities_1
-                    test2 = top_centrality_based_nodes_centralities_2
-                    
-                    if (len(top_centrality_based_nodes_centralities_1) < len(top_centrality_based_nodes_centralities_2)):
-                        test1 = top_centrality_based_nodes_centralities_2
-                        test2 = top_centrality_based_nodes_centralities_1
-                    
-                    test1.sort()
-                    quantile_levels1 = np.arange(len(test1),dtype=float)/len(test1)
-
-                    test2.sort()
-                    quantile_levels2 = np.arange(len(test2),dtype=float)/len(test2)
-
-                    #Use the smaller set of quantile levels to create the plot
-                    quantile_levels = quantile_levels2
-
-                    #We already have the set of quantiles for the smaller data set
-                    quantiles2 = test2
-
-                    #We find the set of quantiles for the larger data set using linear interpolation
-                    quantiles1 = np.interp(quantile_levels,quantile_levels1,test1)
-
-                    #Plot the quantiles to create the qq plot
-                    pylab.plot(quantiles1,quantiles2, label = ___centrality + ' vs ' + ___centrality_2)
-
-                    #Add a reference line
-                    maxval = max(test1[-1],test2[-1])
-                    minval = min(test1[0],test2[0])
-                    pylab.plot([minval,maxval],[minval,maxval],'k-')
-
-
-
-                    
-
-            pylab.show()
-
+        plt.xlabel(centrality)   
+        plt.title('top ' + str(i) + ' nodes and critical nodes')
+        plt.legend()
+        # show plot
+        plt.show()
 
 

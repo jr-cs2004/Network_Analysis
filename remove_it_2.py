@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 import statsmodels.api as sm
 import pylab
+from statsmodels.graphics.gofplots import qqplot_2samples
  
 _lambda = 0.6
 def get_essential_proteins_info(species):
@@ -133,7 +134,7 @@ for centrality in centrality_list:
 
 
 for centrality in centrality_list:
-    for i in range(650, 651, 50):
+    for i in range(200, 201, 50):
         file_name = ".\\" + species + "\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt"
         with open (file_name, 'r') as critical_nodes_file:
             critical_nodes = []
@@ -162,78 +163,29 @@ for centrality in centrality_list:
                 top_centrality_based_nodes_centralities_1.append(all_proteins_centrality_dictionary[centrality][node])
             top_centrality_based_nodes_centralities_1 = np.array(top_centrality_based_nodes_centralities_1)
 
-            
+            x = top_centrality_based_nodes_centralities_1
+            y = critical_nodes_centrality
+            pp_x = sm.ProbPlot(x)
+            pp_y = sm.ProbPlot(y)
+            qqplot_2samples(pp_x, pp_y)
 
-            
 
             for ___centrality_2 in centrality_list:
-                top_centrality_based_nodes_centralities_2 = []
-                top_centrality_based_nodes = all_top_centrality_based_nodes[___centrality_2][0:i]
-                top_centrality_based_nodes = [value for value in top_centrality_based_nodes if value in essential_IDs]
-                print(___centrality_2 + '_baed_nodes: ', len(top_centrality_based_nodes))
-                for node in top_centrality_based_nodes:
-                    top_centrality_based_nodes_centralities_2.append(all_proteins_centrality_dictionary[centrality][node])
-                top_centrality_based_nodes_centralities_2 = np.array(top_centrality_based_nodes_centralities_2)
-                test1 = top_centrality_based_nodes_centralities_2
-                test2 = critical_nodes_centrality
-                test1.sort()
-                quantile_levels1 = np.arange(len(test1),dtype=float)/len(test1)
-
-                test2.sort()
-                quantile_levels2 = np.arange(len(test2),dtype=float)/len(test2)
-
-                #Use the smaller set of quantile levels to create the plot
-                quantile_levels = quantile_levels2
-
-                #We already have the set of quantiles for the smaller data set
-                quantiles2 = test2
-
-                #We find the set of quantiles for the larger data set using linear interpolation
-                quantiles1 = np.interp(quantile_levels,quantile_levels1,test1)
-
-                #Plot the quantiles to create the qq plot
-                pylab.plot(quantiles1,quantiles2, label = 'Critical vs ' + ___centrality_2)
-
-                #Add a reference line
-                maxval = max(test1[-1],test2[-1])
-                minval = min(test1[0],test2[0])
-                pylab.plot([minval,maxval],[minval,maxval],'k-')
-
                 if ___centrality_2 != ___centrality:
-                    test1 = top_centrality_based_nodes_centralities_1
-                    test2 = top_centrality_based_nodes_centralities_2
+                    top_centrality_based_nodes_centralities_2 = []
+                    top_centrality_based_nodes = all_top_centrality_based_nodes[___centrality_2][0:i]
+                    top_centrality_based_nodes = [value for value in top_centrality_based_nodes if value in essential_IDs]
+                    print(___centrality_2 + '_baed_nodes: ', len(top_centrality_based_nodes))
+                    for node in top_centrality_based_nodes:
+                        top_centrality_based_nodes_centralities_2.append(all_proteins_centrality_dictionary[centrality][node])
+                    top_centrality_based_nodes_centralities_2 = np.array(top_centrality_based_nodes_centralities_2)
+
+                    x = top_centrality_based_nodes_centralities_1
+                    y = top_centrality_based_nodes_centralities_2
+                    pp_x = sm.ProbPlot(x)
+                    pp_y = sm.ProbPlot(y)
+                    qqplot_2samples(pp_x, pp_y)
                     
-                    if (len(top_centrality_based_nodes_centralities_1) < len(top_centrality_based_nodes_centralities_2)):
-                        test1 = top_centrality_based_nodes_centralities_2
-                        test2 = top_centrality_based_nodes_centralities_1
-                    
-                    test1.sort()
-                    quantile_levels1 = np.arange(len(test1),dtype=float)/len(test1)
-
-                    test2.sort()
-                    quantile_levels2 = np.arange(len(test2),dtype=float)/len(test2)
-
-                    #Use the smaller set of quantile levels to create the plot
-                    quantile_levels = quantile_levels2
-
-                    #We already have the set of quantiles for the smaller data set
-                    quantiles2 = test2
-
-                    #We find the set of quantiles for the larger data set using linear interpolation
-                    quantiles1 = np.interp(quantile_levels,quantile_levels1,test1)
-
-                    #Plot the quantiles to create the qq plot
-                    pylab.plot(quantiles1,quantiles2, label = ___centrality + ' vs ' + ___centrality_2)
-
-                    #Add a reference line
-                    maxval = max(test1[-1],test2[-1])
-                    minval = min(test1[0],test2[0])
-                    pylab.plot([minval,maxval],[minval,maxval],'k-')
-
-
-
-                    
-
             pylab.show()
 
 

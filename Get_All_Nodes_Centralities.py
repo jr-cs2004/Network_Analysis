@@ -37,8 +37,8 @@ def get_essential_proteins_info(species):
     print('###################')
     return [_IDs, _Essentiality, essential_IDs, unknown_essential_IDs]
 
-species = "Escherichia coli"
-# species = "Saccharomyces cerevisiae"
+# species = "Escherichia coli"
+species = "Saccharomyces cerevisiae"
 
 file_name = ".\\" + species + "\\DIP\\output\\original_PPIs_redundancies_N_self_loops_removed_N_Connected.txt"
 G = nx.read_edgelist(file_name, nodetype=str, data=(('weight', int),)) #reading a graph as edge listed
