@@ -28,8 +28,8 @@ def get_essential_proteins_info(species):
     return [_IDs, _Essentiality, essential_IDs, unknown_essential_IDs]
 
 
-# species = "Escherichia coli"
-species = "Saccharomyces cerevisiae"
+species = "Escherichia coli"
+# species = "Saccharomyces cerevisiae"
 
 
 essential_IDs = get_essential_proteins_info(species)[2]
@@ -118,7 +118,7 @@ for centrality in centrality_list:
 
 all_top_centrality_based_nodes = {}
 for centrality in centrality_list:
-    file_name = ".\\" + species + "\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality.lower() + "_centrality.budget_950.txt"
+    file_name = ".\\" + species + "\\DIP\\output\\global_centrality_analysis\\removed_nodes_based_on_" + centrality.lower() + "_centrality.budget_400.txt"
     with open (file_name, 'r') as centrality_based_nodes_file:
         _list = []
         _index = 0
@@ -132,8 +132,8 @@ for centrality in centrality_list:
 
 
 for centrality in centrality_list:
-    figs, axs = plt.subplots(2, 2)
-    for i in range(50, 201, 50):
+    figs, axs = plt.subplots(1, 2)
+    for i in range(100, 201, 100):        
         box_plot_data = []
         file_name = ".\\" + species + "\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt"
         with open (file_name, 'r') as critical_nodes_file:
@@ -153,6 +153,8 @@ for centrality in centrality_list:
         critical_nodes_centrality = np.array(critical_nodes_centrality)
         box_plot_data.append(critical_nodes_centrality)
 
+        all_median = 0
+
         for ___centrality in centrality_list:
             top_centrality_based_nodes_centralities = []
 
@@ -165,28 +167,29 @@ for centrality in centrality_list:
             
             box_plot_data.append(top_centrality_based_nodes_centralities)
 
-       
-        
-        # Creating plot
-        # bp = ax.boxplot(box_plot_data)
+            all_median += np.median(top_centrality_based_nodes_centralities)
 
-        if (i == 50):
-            axs[0, 0].set_title('B = ' + str(i))
-            axs[0, 0].boxplot(box_plot_data)
+        all_median /= 4
+
+        x = [all_median, all_median, all_median, all_median, all_median, all_median, all_median, all_median]
+
         if (i == 100):
-            axs[0, 1].set_title('B = ' + str(i))
-            axs[0, 1].boxplot(box_plot_data)
-        if (i == 150):
-            axs[1, 0].set_title('B = ' + str(i))
-            axs[1, 0].boxplot(box_plot_data)
+            axs[0].set_title('B = ' + str(i))
+            axs[0].boxplot(box_plot_data)
+            axs[0].plot(x, linewidth=0.5)
         if (i == 200):
-            axs[1, 1].set_title('B = ' + str(i))
-            axs[1, 1].boxplot(box_plot_data)
+            axs[1].set_title('B = ' + str(i))
+            axs[1].boxplot(box_plot_data)
+            axs[1].plot(x, linewidth=0.5)
+
     for ax in axs.flat:
         ax.set(ylabel=centrality, xticklabels = ('GA', 'DC', 'BC', 'CC', 'EC'))            
+
     # Hide x labels and tick labels for top plots and y ticks for right plots.
     for ax in axs.flat:
         ax.label_outer()
+
+    figs.set_size_inches(6.4, 2.4)
     plt.savefig(".\\" + species + "\\DIP\\output\\images\\box_plot\\" + centrality +".png")
 
 

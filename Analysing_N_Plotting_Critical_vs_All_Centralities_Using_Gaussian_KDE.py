@@ -34,7 +34,7 @@ species = "Saccharomyces cerevisiae"
 
 essential_IDs = get_essential_proteins_info(species)[2]
 
-centrality_list = ['Degree', 'Betweenness', 'Closeness', 'Eigenvector'] # 
+centrality_list = ['Degree'] # , 'Betweenness', 'Closeness', 'Eigenvector'
 centraliy_labels = {'Degree': 'DC', 'Betweenness': 'BC', 'Closeness': 'CC', 'Eigenvector': 'EC'}
 centraliy_colors = {'Degree': '#ff7f0e', 'Betweenness': '#2ca02c', 'Closeness': '#9467bd', 'Eigenvector': '#1f77b4'}
 centrality = centrality_list[0]
@@ -150,16 +150,16 @@ for centrality in centrality_list:
         density._compute_covariance()
         if (i == 50):
             axs[0, 0].set_title('B = ' + str(i))
-            axs[0, 0].plot(x_vals, density(x_vals), color='#111DD8', label = "All_Essential_Proteins")
+            axs[0, 0].plot(x_vals, density(x_vals), color='#111DD8', label = "All")
         if (i == 100):
             axs[0, 1].set_title('B = ' + str(i))
-            axs[0, 1].plot(x_vals, density(x_vals), color='#111DD8', label = "All_Essential_Proteins")
+            axs[0, 1].plot(x_vals, density(x_vals), color='#111DD8', label = "All")
         if (i == 150):
             axs[1, 0].set_title('B = ' + str(i))
-            axs[1, 0].plot(x_vals, density(x_vals), color='#111DD8', label = "All_Essential_Proteins")
+            axs[1, 0].plot(x_vals, density(x_vals), color='#111DD8', label = "All")
         if (i == 200):
             axs[1, 1].set_title('B = ' + str(i))
-            axs[1, 1].plot(x_vals, density(x_vals), color='#111DD8', label = "All_Essential_Proteins")
+            axs[1, 1].plot(x_vals, density(x_vals), color='#111DD8', label = "All")
 
         file_name = ".\\" + species + "\\DIP\\output\\Boost\\Result\\critical.nodes.found.by.GA." + str(i) + ".txt"
         with open (file_name, 'r') as critical_nodes_file:
